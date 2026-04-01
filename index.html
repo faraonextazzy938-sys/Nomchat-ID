@@ -5,93 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nomchat ID</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- HEADER -->
 <header class="header">
     <div class="header-inner">
         <a href="index.html" class="logo">
+            <span class="logo-emoji">💬</span>
             <span class="logo-text">Nomchat</span>
             <span class="logo-badge">ID</span>
         </a>
-        <nav class="header-nav" id="header-nav">
+        <nav class="header-nav">
             <a href="index.html" class="nav-link active">Home</a>
             <a href="games.html" class="nav-link">Games</a>
-            <a href="profile.html" class="nav-link" id="nav-profile" style="display:none">My Profile</a>
+            <a href="profile.html" class="nav-link" id="nav-profile" style="display:none">Profile</a>
         </nav>
-        <div class="header-actions">
-            <div id="header-user-area">
-                <a href="login.html" class="btn-header-login">Log in</a>
-            </div>
+        <div id="header-user-area">
+            <a href="login.html" class="btn-header-login">Sign in</a>
         </div>
     </div>
 </header>
 
-<!-- HERO -->
 <section class="hero">
+    <div class="hero-bg">
+        <div class="orb orb1"></div>
+        <div class="orb orb2"></div>
+        <div class="orb orb3"></div>
+    </div>
     <div class="hero-inner">
-        <div class="hero-logo">
-            <span class="hero-logo-text">Nomchat</span>
-            <span class="hero-logo-badge">ID</span>
+        <div class="hero-eyebrow">
+            <span class="logo-emoji" style="font-size:1em">💬</span>
+            Introducing Nomchat ID
         </div>
-        <h1 class="hero-title">One account.<br>All your games.</h1>
-        <p class="hero-sub">Sign in once and play across all ND Brawl services. Your progress, friends and purchases — always with you.</p>
-        <div class="hero-actions">
-            <a href="login.html" class="btn-hero-primary">Get started</a>
-            <a href="games.html" class="btn-hero-secondary">See games</a>
+        <h1 class="hero-title">One account.<br><span class="hero-grad">All your games.</span></h1>
+        <p class="hero-sub">Secure email-based login. No passwords. Your identity across every game on the Nomchat platform.</p>
+        <div class="hero-cta">
+            <a href="login.html" class="btn-cta-primary">Get started — free</a>
+            <a href="games.html" class="btn-cta-sec">Explore games →</a>
+        </div>
+        <div class="hero-stats">
+            <div class="stat"><span class="stat-n">2</span><span class="stat-l">Games</span></div>
+            <div class="stat-sep"></div>
+            <div class="stat"><span class="stat-n">100%</span><span class="stat-l">Free</span></div>
+            <div class="stat-sep"></div>
+            <div class="stat"><span class="stat-n">∞</span><span class="stat-l">Devices</span></div>
         </div>
     </div>
     <div class="hero-avatars">
-        <div class="floating-avatar a1">💀</div>
-        <div class="floating-avatar a2">⭐</div>
-        <div class="floating-avatar a3">🔥</div>
-        <div class="floating-avatar a4">⚡</div>
-        <div class="floating-avatar a5">💎</div>
-        <div class="floating-avatar a6">🏆</div>
+        <div class="float-av av1">💀</div>
+        <div class="float-av av2">⭐</div>
+        <div class="float-av av3">🔥</div>
+        <div class="float-av av4">⚡</div>
+        <div class="float-av av5">💎</div>
+        <div class="float-av av6">🏆</div>
     </div>
 </section>
 
-<!-- FEATURES -->
 <section class="features">
     <div class="features-inner">
-        <div class="feature-card">
-            <div class="feature-icon">🔐</div>
-            <h3>Secure login</h3>
-            <p>Email verification code — no passwords to remember or lose.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">🎮</div>
-            <h3>All games</h3>
-            <p>One account works across all games on the ND Brawl platform.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">👤</div>
-            <h3>Player ID</h3>
-            <p>Choose a unique username and avatar that represents you.</p>
-        </div>
-        <div class="feature-card">
-            <div class="feature-icon">📱</div>
-            <h3>Any device</h3>
-            <p>Your account follows you — phone, tablet or desktop.</p>
+        <div class="sec-label">Why Nomchat ID</div>
+        <h2 class="sec-title">Built for gamers.</h2>
+        <div class="feat-grid">
+            <div class="feat-card feat-wide">
+                <div class="feat-icon">🔐</div>
+                <h3>Zero-password login</h3>
+                <p>We send a one-time code to your email. No passwords to remember or lose.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon">⚡</div>
+                <h3>Instant access</h3>
+                <p>Sign in in seconds across all your devices.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon">🎨</div>
+                <h3>Your identity</h3>
+                <p>Choose from 20+ unique avatars for your profile.</p>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon">🌐</div>
+                <h3>Cross-platform</h3>
+                <p>Phone, tablet, desktop — one account everywhere.</p>
+            </div>
+            <div class="feat-card feat-wide">
+                <div class="feat-icon">🎮</div>
+                <h3>Growing ecosystem</h3>
+                <p>ND Brawl, NeuralAI and more. One Nomchat ID for all.</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- FOOTER -->
+<section class="games-sec">
+    <div class="games-sec-inner">
+        <div class="sec-label">Games</div>
+        <h2 class="sec-title">Play with Nomchat ID</h2>
+        <div class="preview-grid">
+            <a href="https://nd-brawl-news.up.railway.app" target="_blank" class="preview-card">
+                <div class="preview-banner" style="background:linear-gradient(135deg,#0d47a1,#1565c0)">
+                    <svg width="56" height="56" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#000"/><circle cx="50" cy="50" r="42" fill="#f5c400"/><ellipse cx="50" cy="47" rx="20" ry="19" fill="#000"/><ellipse cx="50" cy="47" rx="16" ry="15" fill="#f5c400"/><circle cx="41" cy="45" r="6" fill="#000"/><circle cx="59" cy="45" r="6" fill="#000"/><polygon points="50,55 46,63 54,63" fill="#000"/></svg>
+                </div>
+                <div class="preview-info">
+                    <div><div class="preview-name">ND Brawl</div><div class="preview-dev">by ND PCCSS</div></div>
+                    <span class="preview-arr">→</span>
+                </div>
+            </a>
+            <a href="#" class="preview-card">
+                <div class="preview-banner" style="background:linear-gradient(135deg,#1a1a2e,#6a0dad)">
+                    <span style="font-size:3.5em">🤖</span>
+                </div>
+                <div class="preview-info">
+                    <div><div class="preview-name">NeuralAI</div><div class="preview-dev">by Nomchat prod.</div></div>
+                    <span class="preview-arr">→</span>
+                </div>
+            </a>
+        </div>
+        <a href="games.html" class="btn-see-all">See all games →</a>
+    </div>
+</section>
+
 <footer class="footer">
     <div class="footer-inner">
-        <div class="footer-logo">
-            <span class="logo-text">Nomchat</span>
-            <span class="logo-badge">ID</span>
+        <div>
+            <a href="index.html" class="logo" style="margin-bottom:10px;display:inline-flex">
+                <span class="logo-emoji">💬</span>
+                <span class="logo-text">Nomchat</span>
+                <span class="logo-badge">ID</span>
+            </a>
+            <p style="color:var(--text3);font-size:0.85em;margin-top:6px">The gaming identity platform.</p>
         </div>
         <div class="footer-links">
             <a href="#">Privacy Policy</a>
             <a href="#">Terms of Service</a>
             <a href="#">Support</a>
+            <a href="games.html">Games</a>
         </div>
-        <p class="footer-copy">© 2026 ND Brawl. All rights reserved.</p>
     </div>
+    <div class="footer-bottom">© 2026 Nomchat ID. All rights reserved.</div>
 </footer>
 
 <script src="app.js"></script>
