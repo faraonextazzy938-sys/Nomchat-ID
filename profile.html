@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomchat ID — Profile</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <a href="index.html" class="logo">
+            <span class="logo-text">Nomchat</span>
+            <span class="logo-badge">ID</span>
+        </a>
+        <div class="header-actions">
+            <button class="btn-header-logout" onclick="logout()">Log out</button>
+        </div>
+    </div>
+</header>
+
+<!-- PROFILE HERO -->
+<div class="profile-hero">
+    <div class="profile-avatar-ring">
+        <div class="profile-avatar-img" id="profile-avatar">💀</div>
+    </div>
+    <div class="profile-name-row">
+        <span class="id-badge-lg">ID</span>
+        <span class="profile-username" id="profile-username">Player</span>
+        <button class="btn-edit-name" onclick="editUsername()">✏️</button>
+    </div>
+    <p class="profile-email" id="profile-email">—</p>
+</div>
+
+<!-- PROFILE BODY -->
+<div class="profile-body">
+
+    <!-- Смена аватара -->
+    <div class="profile-section">
+        <h3 class="section-title">Change avatar</h3>
+        <div class="avatar-grid" id="profile-av-grid"></div>
+        <button class="btn-save" id="btn-save-av" onclick="saveAvatar()" disabled>Save avatar</button>
+    </div>
+
+    <!-- Игры -->
+    <div class="profile-section">
+        <h3 class="section-title">Connected games</h3>
+        <div class="games-list">
+            <div class="game-item">
+                <div class="game-icon">
+                    <svg width="36" height="36" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#000"/><circle cx="50" cy="50" r="42" fill="#f5c400"/><ellipse cx="50" cy="47" rx="20" ry="19" fill="#000"/><ellipse cx="50" cy="47" rx="16" ry="15" fill="#f5c400"/><circle cx="41" cy="45" r="6" fill="#000"/><circle cx="59" cy="45" r="6" fill="#000"/><polygon points="50,55 46,63 54,63" fill="#000"/><ellipse cx="43" cy="33" rx="8" ry="4.5" fill="#fff" opacity="0.65" transform="rotate(-20,43,33)"/></svg>
+                </div>
+                <div class="game-info">
+                    <div class="game-name">ND Brawl</div>
+                    <div class="game-status connected">Connected</div>
+                </div>
+                <a href="../index.html" class="btn-game-open">Open</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Безопасность -->
+    <div class="profile-section">
+        <h3 class="section-title">Account</h3>
+        <div class="account-info">
+            <div class="info-row">
+                <span class="info-label">Email</span>
+                <span class="info-value" id="acc-email">—</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Member since</span>
+                <span class="info-value" id="acc-since">—</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Last login</span>
+                <span class="info-value" id="acc-login">—</span>
+            </div>
+        </div>
+        <button class="btn-danger-outline" onclick="deleteAccount()">Delete account</button>
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+<script src="profile.js"></script>
+</body>
+</html>

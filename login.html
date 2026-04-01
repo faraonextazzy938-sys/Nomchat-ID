@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nomchat ID — Log in</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="auth-page">
+
+<div class="auth-wrap">
+    <div class="auth-card">
+
+        <div class="sc-logo">
+            <span class="logo-text">Nomchat</span>
+            <span class="logo-badge">ID</span>
+        </div>
+
+        <div class="progress-wrap">
+            <span class="progress-step active" id="lbl-1">Log in</span>
+            <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+            <div class="progress-dot" id="prog-dot"></div>
+            <span class="progress-step" id="lbl-2">Verify</span>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step active" id="s1">
+            <div class="step-title">Log in to Nomchat ID</div>
+            <p class="step-sub">Enter your email and we'll send you a verification code.</p>
+            <input type="email" id="email-inp" class="auth-input" placeholder="Enter your email" autocomplete="email">
+            <p class="small-note">Protected by reCAPTCHA. <a href="#">Privacy Policy</a> and <a href="#">Terms of Service</a> apply.</p>
+            <button class="btn-auth" id="btn-login" onclick="doLogin()">LOG IN</button>
+            <button class="btn-auth-sec" onclick="history.back()">CANCEL</button>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" id="s2">
+            <div class="step-title">Almost there!</div>
+            <p class="step-sub">A verification code has been sent to<br><strong id="email-show"></strong></p>
+            <div class="demo-box" id="demo-box">
+                <span class="demo-lbl">Your code:</span>
+                <span class="demo-val" id="demo-val">------</span>
+            </div>
+            <input type="text" id="code-inp" class="auth-input code-inp" placeholder="123 456" maxlength="7" inputmode="numeric">
+            <button class="btn-auth ready" id="btn-verify" onclick="doVerify()">CONTINUE</button>
+            <button class="btn-auth-sec" onclick="goStep(1)">GO BACK</button>
+            <button class="btn-link" onclick="resend()">Didn't receive the code?</button>
+        </div>
+
+        <!-- Step 3: Avatar -->
+        <div class="step" id="s3">
+            <div class="step-title">Choose your avatar</div>
+            <p class="step-sub">Pick an icon for your Nomchat ID</p>
+            <div class="avatar-grid" id="av-grid"></div>
+            <button class="btn-auth" id="btn-av" onclick="confirmAvatar()" disabled>CONFIRM</button>
+        </div>
+
+        <!-- Step 4: Done -->
+        <div class="step" id="s4">
+            <div class="done-ring">
+                <div class="done-av" id="done-av">💀</div>
+            </div>
+            <div class="done-name">
+                <span class="id-badge-sm">ID</span>
+                <span id="done-username">Player</span>
+            </div>
+            <div class="step-title" style="margin-top:14px">You are all set!</div>
+            <p class="step-sub">Your Nomchat ID is ready.</p>
+            <button class="btn-auth ready" onclick="goProfile()">VIEW PROFILE</button>
+        </div>
+
+        <div class="auth-footer">
+            <a href="#">Privacy Policy</a>
+            <span>•</span>
+            <a href="#">Terms of Service</a>
+            <span>•</span>
+            <a href="#">Manage Cookies</a>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script src="login.js"></script>
+</body>
+</html>
