@@ -29,6 +29,9 @@ def index():
 
 @app.route('/<path:filename>')
 def static_files(filename):
+    # Для директорий отдаём index.html
+    if os.path.isdir(os.path.join('.', filename)):
+        return send_from_directory(filename, 'index.html')
     return send_from_directory('.', filename)
 
 # ── Auth API ──────────────────────────────────────────────────
