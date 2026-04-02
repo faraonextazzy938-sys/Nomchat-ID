@@ -6,104 +6,179 @@
     <title>Nomchat ID — Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        :root{--accent:#1565c0;--bg:#0a0e1a;--bg2:#0f1525;--border:rgba(255,255,255,0.07);--text2:rgba(255,255,255,0.6);--text3:rgba(255,255,255,0.3)}
-        body{font-family:'Inter',sans-serif;background:var(--bg);color:#fff;min-height:100vh}
-        .sidebar{position:fixed;top:0;left:0;bottom:0;width:220px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:24px 0;z-index:100}
-        .sb-logo{padding:0 20px 24px;border-bottom:1px solid var(--border);margin-bottom:16px}
-        .sb-logo-row{display:flex;align-items:center;gap:7px}
-        .sb-logo-emoji{font-size:1.3em}
-        .sb-logo-text{color:#fff;font-weight:900;font-size:1.05em}
-        .sb-logo-badge{background:var(--accent);color:#fff;font-size:0.6em;font-weight:900;padding:2px 6px;border-radius:4px}
-        .sb-sub{color:var(--text3);font-size:0.75em;margin-top:4px}
-        .nav-item{display:flex;align-items:center;gap:10px;padding:11px 20px;color:var(--text2);cursor:pointer;transition:all 0.2s;font-size:0.92em;border-left:3px solid transparent}
-        .nav-item:hover{background:rgba(255,255,255,0.05);color:#fff}
-        .nav-item.active{background:rgba(21,101,192,0.15);color:#fff;border-left-color:var(--accent)}
-        .nav-icon{font-size:1.1em;width:20px;text-align:center}
-        .sb-footer{margin-top:auto;padding:16px 20px;border-top:1px solid var(--border)}
-        .sb-user{color:var(--text3);font-size:0.8em;margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-        .btn-logout{width:100%;padding:8px;background:rgba(255,255,255,0.06);color:var(--text2);border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:0.85em;font-family:inherit;transition:all 0.2s}
-        .btn-logout:hover{background:rgba(255,255,255,0.1);color:#fff}
-        .main{margin-left:220px;padding:32px;min-height:100vh}
-        .page{display:none}
-        .page.active{display:block;animation:fadeIn 0.3s ease}
-        @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-        .page-title{font-size:1.5em;font-weight:800;margin-bottom:24px}
-        .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:32px}
-        .stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px}
-        .stat-label{font-size:0.82em;color:var(--text3);margin-bottom:6px}
-        .stat-value{font-size:2.2em;font-weight:900;color:var(--accent)}
-        .table-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
-        .table-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-        .table-head h3{font-size:0.95em;font-weight:700}
-        table{width:100%;border-collapse:collapse}
-        th{padding:11px 16px;text-align:left;font-size:0.78em;color:var(--text3);font-weight:600;text-transform:uppercase;border-bottom:1px solid var(--border)}
-        td{padding:12px 16px;font-size:0.88em;border-bottom:1px solid rgba(255,255,255,0.04);vertical-align:middle}
-        tr:last-child td{border-bottom:none}
-        tr:hover td{background:rgba(255,255,255,0.02)}
-        .badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:0.75em;font-weight:700}
-        .badge-admin{background:rgba(21,101,192,0.2);color:#42a5f5}
-        .badge-user{background:rgba(255,255,255,0.06);color:var(--text3)}
-        .btn{padding:7px 14px;border:none;border-radius:8px;font-size:0.82em;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s}
-        .btn-primary{background:var(--accent);color:#fff}
-        .btn-primary:hover{background:#1976d2}
-        .btn-danger{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.2)}
-        .btn-danger:hover{background:rgba(239,68,68,0.25)}
-        .actions{display:flex;gap:6px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#f5f7fa;color:#111;min-height:100vh}
+
+/* Sidebar */
+.sb{position:fixed;top:0;left:0;bottom:0;width:240px;background:linear-gradient(180deg,#1a3a6b,#0d47a1);display:flex;flex-direction:column;z-index:100}
+.sb-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.sb-logo-row{display:flex;align-items:center;gap:8px}
+.sb-logo-icon{font-size:1.4em}
+.sb-logo-name{color:#fff;font-weight:900;font-size:1.05em}
+.sb-logo-badge{background:#fff;color:#1565c0;font-size:0.6em;font-weight:900;padding:2px 6px;border-radius:4px}
+.sb-sub{color:rgba(255,255,255,0.4);font-size:0.75em;margin-top:4px}
+.sb-nav{flex:1;padding:12px 0}
+.sb-item{display:flex;align-items:center;gap:10px;padding:12px 20px;color:rgba(255,255,255,0.7);cursor:pointer;transition:all 0.2s;font-size:0.92em;border-left:3px solid transparent}
+.sb-item:hover{background:rgba(255,255,255,0.08);color:#fff}
+.sb-item.active{background:rgba(255,255,255,0.12);color:#fff;border-left-color:#42a5f5}
+.sb-icon{font-size:1.1em;width:20px;text-align:center}
+.sb-foot{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1)}
+.sb-user{color:rgba(255,255,255,0.5);font-size:0.78em;margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sb-logout{width:100%;padding:9px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:8px;cursor:pointer;font-size:0.85em;font-family:inherit;transition:all 0.2s}
+.sb-logout:hover{background:rgba(255,255,255,0.15);color:#fff}
+
+/* Main */
+.main{margin-left:240px;padding:32px;min-height:100vh}
+.page{display:none}
+.page.active{display:block;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-title{font-size:1.6em;font-weight:800;margin-bottom:6px}
+.page-sub{color:#888;font-size:0.9em;margin-bottom:28px}
+
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
+.stat-lbl{font-size:0.82em;color:#888;margin-bottom:6px}
+.stat-val{font-size:2.2em;font-weight:900;color:#1565c0}
+
+/* Table */
+.tbl-wrap{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);overflow:hidden}
+.tbl-head{padding:18px 22px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between}
+.tbl-head h3{font-size:1em;font-weight:700}
+.tbl-search{padding:8px 14px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:0.88em;font-family:inherit;outline:none;width:220px;transition:border-color 0.2s}
+.tbl-search:focus{border-color:#1565c0}
+table{width:100%;border-collapse:collapse}
+th{padding:11px 16px;text-align:left;font-size:0.78em;color:#aaa;font-weight:600;text-transform:uppercase;border-bottom:1px solid #f0f0f0}
+td{padding:13px 16px;font-size:0.88em;border-bottom:1px solid #fafafa;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+
+/* Badges */
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:0.75em;font-weight:700}
+.badge-admin{background:#e3f2fd;color:#1565c0}
+.badge-user{background:#f5f5f5;color:#888}
+
+/* Buttons */
+.btn{padding:7px 14px;border:none;border-radius:8px;font-size:0.82em;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s}
+.btn-blue{background:#1565c0;color:#fff}
+.btn-blue:hover{background:#1976d2}
+.btn-red{background:#ffebee;color:#e53935;border:1px solid #ffcdd2}
+.btn-red:hover{background:#ffcdd2}
+.btn-sm{padding:5px 12px;font-size:0.8em}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border-radius:20px;padding:32px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:fadeIn 0.25s ease}
+.modal h3{font-size:1.2em;font-weight:800;margin-bottom:20px}
+.form-row{margin-bottom:16px}
+.form-row label{display:block;font-size:0.82em;font-weight:700;color:#555;margin-bottom:6px;text-transform:uppercase}
+.form-row input,.form-row select{width:100%;padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:0.95em;font-family:inherit;outline:none;transition:border-color 0.2s}
+.form-row input:focus,.form-row select:focus{border-color:#1565c0}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.btn-cancel{background:#f5f5f5;color:#333}
+.btn-cancel:hover{background:#eee}
     </style>
 </head>
 <body>
 
-<aside class="sidebar">
+<aside class="sb">
     <div class="sb-logo">
         <div class="sb-logo-row">
-            <span class="sb-logo-emoji">💬</span>
-            <span class="sb-logo-text">Nomchat</span>
+            <span class="sb-logo-icon">💬</span>
+            <span class="sb-logo-name">NOMCHAT</span>
             <span class="sb-logo-badge">ID</span>
         </div>
         <div class="sb-sub">Admin Panel</div>
     </div>
-    <nav>
-        <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
-        <div class="nav-item" onclick="showPage('users',this)"><span class="nav-icon">👥</span>Users</div>
+    <nav class="sb-nav">
+        <div class="sb-item active" onclick="showPage('dashboard',this)"><span class="sb-icon">📊</span>Dashboard</div>
+        <div class="sb-item" onclick="showPage('users',this)"><span class="sb-icon">👥</span>Users</div>
+        <div class="sb-item" onclick="showPage('admins',this)"><span class="sb-icon">🛡️</span>Admins</div>
     </nav>
-    <div class="sb-footer">
+    <div class="sb-foot">
         <div class="sb-user" id="admin-email">—</div>
-        <button class="btn-logout" onclick="logout()">Sign out</button>
+        <button class="sb-logout" onclick="logout()">Sign out</button>
     </div>
 </aside>
 
 <main class="main">
+
+    <!-- Dashboard -->
     <div class="page active" id="page-dashboard">
         <div class="page-title">Dashboard</div>
-        <div class="stats-grid">
-            <div class="stat-card"><div class="stat-label">Total users</div><div class="stat-value" id="stat-users">—</div></div>
-            <div class="stat-card"><div class="stat-label">Admins</div><div class="stat-value" id="stat-admins">—</div></div>
+        <div class="page-sub">Overview of Nomchat ID platform</div>
+        <div class="stats">
+            <div class="stat-card"><div class="stat-lbl">Total users</div><div class="stat-val" id="s-users">—</div></div>
+            <div class="stat-card"><div class="stat-lbl">Admins</div><div class="stat-val" id="s-admins">—</div></div>
+            <div class="stat-card"><div class="stat-lbl">New today</div><div class="stat-val" id="s-today">—</div></div>
         </div>
     </div>
 
+    <!-- Users -->
     <div class="page" id="page-users">
         <div class="page-title">Users</div>
-        <div class="table-wrap">
-            <div class="table-head"><h3>All users</h3></div>
+        <div class="page-sub">All registered Nomchat ID accounts</div>
+        <div class="tbl-wrap">
+            <div class="tbl-head">
+                <h3>All users</h3>
+                <input class="tbl-search" id="user-search" placeholder="Search by email or username..." oninput="filterUsers()">
+            </div>
             <table>
-                <thead><tr><th>ID</th><th>Email</th><th>Username</th><th>Role</th><th>Joined</th><th>Last login</th><th>Actions</th></tr></thead>
+                <thead><tr><th>ID</th><th>Avatar</th><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Last login</th><th>Actions</th></tr></thead>
                 <tbody id="users-tbody"></tbody>
             </table>
         </div>
     </div>
+
+    <!-- Admins -->
+    <div class="page" id="page-admins">
+        <div class="page-title">Admin accounts</div>
+        <div class="page-sub">Manage admin access to this panel</div>
+        <div class="tbl-wrap">
+            <div class="tbl-head">
+                <h3>Admins</h3>
+                <button class="btn btn-blue" onclick="openAddAdmin()">+ Add admin</button>
+            </div>
+            <table>
+                <thead><tr><th>ID</th><th>Email</th><th>Username</th><th>Added</th><th>Actions</th></tr></thead>
+                <tbody id="admins-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+
 </main>
+
+<!-- Add admin modal -->
+<div class="modal-bg" id="add-admin-modal">
+    <div class="modal">
+        <h3>Add admin</h3>
+        <div class="form-row">
+            <label>Email</label>
+            <input type="email" id="new-admin-email" placeholder="user@example.com">
+        </div>
+        <p style="font-size:0.85em;color:#888;margin-top:-8px">The user must already have a Nomchat ID account.</p>
+        <div class="modal-actions">
+            <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-blue" onclick="addAdmin()">Make admin</button>
+        </div>
+    </div>
+</div>
 
 <script>
 const API = '';
+let allUsers = [];
 
 async function init() {
-    const res = await fetch(`${API}/api/auth/me`, { credentials:'include' });
-    if (!res.ok) { window.location.href = 'login.html'; return; }
-    const user = await res.json();
-    if (!user.is_admin) { window.location.href = 'index.html'; return; }
-    document.getElementById('admin-email').textContent = user.email;
-    loadDashboard();
+    try {
+        const res = await fetch(`${API}/api/auth/me`, { credentials:'include' });
+        if (!res.ok) { window.location.href = 'login.html'; return; }
+        const user = await res.json();
+        if (!user.is_admin) { window.location.href = 'index.html'; return; }
+        document.getElementById('admin-email').textContent = user.email;
+        loadDashboard();
+    } catch (_) { window.location.href = 'login.html'; }
 }
 
 async function logout() {
@@ -113,47 +188,105 @@ async function logout() {
 
 function showPage(name, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('active'));
     document.getElementById('page-' + name).classList.add('active');
     el.classList.add('active');
     if (name === 'dashboard') loadDashboard();
-    if (name === 'users') loadUsers();
+    if (name === 'users')     loadUsers();
+    if (name === 'admins')    loadAdmins();
 }
 
 async function loadDashboard() {
-    const res  = await fetch(`${API}/api/admin/stats`, { credentials:'include' });
-    const data = await res.json();
-    document.getElementById('stat-users').textContent  = data.users;
-    document.getElementById('stat-admins').textContent = data.admins;
+    const [statsRes, usersRes] = await Promise.all([
+        fetch(`${API}/api/admin/stats`, { credentials:'include' }),
+        fetch(`${API}/api/admin/users`, { credentials:'include' })
+    ]);
+    const stats = await statsRes.json();
+    const users = await usersRes.json();
+
+    document.getElementById('s-users').textContent  = stats.users;
+    document.getElementById('s-admins').textContent = stats.admins;
+
+    const today = new Date().toDateString();
+    const newToday = users.filter(u => u.created_at && new Date(u.created_at).toDateString() === today).length;
+    document.getElementById('s-today').textContent = newToday;
 }
 
 async function loadUsers() {
-    const res   = await fetch(`${API}/api/admin/users`, { credentials:'include' });
-    const users = await res.json();
+    const res = await fetch(`${API}/api/admin/users`, { credentials:'include' });
+    allUsers  = await res.json();
+    renderUsers(allUsers);
+}
+
+function renderUsers(users) {
     document.getElementById('users-tbody').innerHTML = users.map(u => `
         <tr>
-            <td>${u.id}</td>
+            <td style="color:#aaa">#${u.id}</td>
+            <td style="font-size:1.4em">${u.avatar || '💬'}</td>
+            <td><strong>${u.username}</strong></td>
             <td>${u.email}</td>
-            <td>${u.username}</td>
             <td><span class="badge badge-${u.is_admin ? 'admin' : 'user'}">${u.is_admin ? 'Admin' : 'User'}</span></td>
             <td>${fmt(u.created_at)}</td>
             <td>${fmt(u.last_login)}</td>
             <td><div class="actions">
-                <button class="btn btn-primary" onclick="toggleAdmin(${u.id})">${u.is_admin ? 'Remove admin' : 'Make admin'}</button>
-                <button class="btn btn-danger" onclick="deleteUser(${u.id})">Delete</button>
+                <button class="btn btn-sm btn-blue" onclick="toggleAdmin(${u.id})">${u.is_admin ? 'Remove admin' : 'Make admin'}</button>
+                <button class="btn btn-sm btn-red" onclick="deleteUser(${u.id})">Delete</button>
             </div></td>
+        </tr>`).join('');
+}
+
+function filterUsers() {
+    const q = document.getElementById('user-search').value.toLowerCase();
+    renderUsers(allUsers.filter(u =>
+        u.email.toLowerCase().includes(q) || u.username.toLowerCase().includes(q)
+    ));
+}
+
+async function loadAdmins() {
+    const res    = await fetch(`${API}/api/admin/users`, { credentials:'include' });
+    const users  = await res.json();
+    const admins = users.filter(u => u.is_admin);
+    document.getElementById('admins-tbody').innerHTML = admins.map(u => `
+        <tr>
+            <td style="color:#aaa">#${u.id}</td>
+            <td>${u.email}</td>
+            <td>${u.username}</td>
+            <td>${fmt(u.created_at)}</td>
+            <td><button class="btn btn-sm btn-red" onclick="toggleAdmin(${u.id})">Remove admin</button></td>
         </tr>`).join('');
 }
 
 async function toggleAdmin(id) {
     await fetch(`${API}/api/admin/users/${id}/toggle-admin`, { method:'POST', credentials:'include' });
     loadUsers();
+    loadAdmins();
 }
 
 async function deleteUser(id) {
-    if (!confirm('Delete this user?')) return;
+    if (!confirm('Delete this user permanently?')) return;
     await fetch(`${API}/api/admin/users/${id}`, { method:'DELETE', credentials:'include' });
     loadUsers();
+}
+
+function openAddAdmin() {
+    document.getElementById('new-admin-email').value = '';
+    document.getElementById('add-admin-modal').classList.add('open');
+}
+
+function closeModal() {
+    document.getElementById('add-admin-modal').classList.remove('open');
+}
+
+async function addAdmin() {
+    const email = document.getElementById('new-admin-email').value.trim();
+    if (!email) return;
+    const res  = await fetch(`${API}/api/admin/users`, { credentials:'include' });
+    const users = await res.json();
+    const user  = users.find(u => u.email === email);
+    if (!user) { alert('User not found. They must register first.'); return; }
+    await fetch(`${API}/api/admin/users/${user.id}/toggle-admin`, { method:'POST', credentials:'include' });
+    closeModal();
+    loadAdmins();
 }
 
 function fmt(iso) {
