@@ -1,0 +1,290 @@
+/* ═══════════════════════════════════════════
+   NOMCHAT ID — Global CSS (Supercell ID style)
+   ═══════════════════════════════════════════ */
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+    --blue:       #1565c0;
+    --blue-dark:  #0d47a1;
+    --blue-light: #42a5f5;
+    --cyan:       #26c6da;
+    --bg-grad:    linear-gradient(160deg,#1a3a6b 0%,#1565c0 40%,#0d47a1 70%,#1a237e 100%);
+    --white:      #ffffff;
+    --gray-bg:    #f5f7fa;
+    --text:       #111;
+    --text2:      #555;
+    --text3:      #999;
+    --border:     #e0e0e0;
+    --shadow:     0 8px 32px rgba(0,0,0,0.12);
+    --shadow-lg:  0 20px 60px rgba(0,0,0,0.18);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: var(--white);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.nc-header {
+    background: var(--bg-grad);
+    position: sticky; top:0; z-index:100;
+    height: 64px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+}
+.nc-header-inner {
+    max-width: 1100px; margin:0 auto; height:100%;
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.nc-logo { display:flex; align-items:center; gap:8px; text-decoration:none; }
+.nc-logo-icon { font-size:1.5em; line-height:1; }
+.nc-logo-name { color:#fff; font-weight:900; font-size:1.1em; letter-spacing:0.5px; }
+.nc-logo-badge {
+    background:#fff; color:var(--blue);
+    font-size:0.62em; font-weight:900;
+    padding:2px 7px; border-radius:5px;
+}
+.nc-nav { display:flex; gap:4px; }
+.nc-nav-link {
+    color:rgba(255,255,255,0.8); text-decoration:none;
+    padding:7px 14px; border-radius:8px;
+    font-size:0.9em; font-weight:500; transition:all 0.2s;
+}
+.nc-nav-link:hover, .nc-nav-link.active { color:#fff; background:rgba(255,255,255,0.12); }
+.nc-header-btn {
+    background:#fff; color:var(--blue);
+    padding:9px 22px; border-radius:99px;
+    font-weight:700; font-size:0.9em; text-decoration:none;
+    transition:all 0.2s; box-shadow:0 2px 12px rgba(0,0,0,0.15);
+}
+.nc-header-btn:hover { background:#e3f2fd; transform:translateY(-1px); }
+.nc-header-user {
+    display:flex; align-items:center; gap:10px;
+}
+.nc-header-avatar {
+    width:36px; height:36px; border-radius:50%;
+    background:rgba(255,255,255,0.2);
+    border:2px solid rgba(255,255,255,0.4);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.2em; text-decoration:none;
+    transition:all 0.2s;
+}
+.nc-header-avatar:hover { background:rgba(255,255,255,0.3); }
+.nc-header-username { color:#fff; font-weight:600; font-size:0.9em; text-decoration:none; }
+.nc-header-logout {
+    background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.8);
+    border:1px solid rgba(255,255,255,0.2); padding:7px 16px; border-radius:99px;
+    font-size:0.85em; font-weight:600; cursor:pointer; font-family:inherit;
+    transition:all 0.2s;
+}
+.nc-header-logout:hover { background:rgba(255,255,255,0.2); color:#fff; }
+
+/* ── HERO ── */
+.nc-hero {
+    background: var(--bg-grad);
+    padding: 80px 24px 100px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.nc-hero::after {
+    content:'';
+    position:absolute; bottom:0; left:0; right:0; height:60px;
+    background: var(--white);
+    clip-path: ellipse(55% 100% at 50% 100%);
+}
+.nc-hero-inner { max-width:700px; margin:0 auto; position:relative; z-index:2; }
+.nc-hero-logo {
+    display:inline-flex; align-items:center; gap:10px;
+    background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2);
+    padding:10px 20px; border-radius:99px; margin-bottom:32px;
+}
+.nc-hero-logo-icon { font-size:1.8em; }
+.nc-hero-logo-name { color:#fff; font-weight:900; font-size:1.4em; letter-spacing:0.5px; }
+.nc-hero-logo-badge {
+    background:#fff; color:var(--blue);
+    font-size:0.75em; font-weight:900;
+    padding:3px 9px; border-radius:5px;
+}
+.nc-hero-title {
+    font-size:3.2em; font-weight:900; color:#fff;
+    line-height:1.15; margin-bottom:20px;
+    text-shadow:0 2px 20px rgba(0,0,0,0.2);
+}
+.nc-hero-sub {
+    font-size:1.1em; color:rgba(255,255,255,0.85);
+    line-height:1.7; margin-bottom:40px; max-width:560px; margin-left:auto; margin-right:auto;
+}
+.nc-hero-actions { display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.nc-btn-primary {
+    background:#fff; color:var(--blue);
+    padding:15px 36px; border-radius:99px;
+    font-weight:800; font-size:1.05em; text-decoration:none;
+    box-shadow:0 8px 24px rgba(0,0,0,0.2); transition:all 0.2s;
+}
+.nc-btn-primary:hover { background:#e3f2fd; transform:translateY(-2px); box-shadow:0 12px 32px rgba(0,0,0,0.25); }
+.nc-btn-outline {
+    background:transparent; color:#fff;
+    padding:15px 36px; border-radius:99px;
+    font-weight:700; font-size:1.05em; text-decoration:none;
+    border:2px solid rgba(255,255,255,0.5); transition:all 0.2s;
+}
+.nc-btn-outline:hover { background:rgba(255,255,255,0.1); border-color:#fff; }
+
+/* ── SECTIONS ── */
+.nc-section { padding:80px 24px; }
+.nc-section-inner { max-width:1100px; margin:0 auto; }
+.nc-section-gray { background:var(--gray-bg); }
+.nc-section-blue { background:var(--bg-grad); }
+
+.nc-section-label {
+    display:inline-block; color:var(--blue);
+    font-size:0.8em; font-weight:700; letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:12px;
+}
+.nc-section-label-white { color:rgba(255,255,255,0.7); }
+.nc-section-title { font-size:2.4em; font-weight:900; letter-spacing:-1px; margin-bottom:48px; }
+.nc-section-title-white { color:#fff; }
+
+/* ── FEATURES ── */
+.nc-feat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:24px; }
+.nc-feat-card {
+    background:#fff; border-radius:20px; padding:32px;
+    box-shadow:var(--shadow); border:1px solid #f0f0f0;
+    transition:transform 0.2s, box-shadow 0.2s;
+}
+.nc-feat-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+.nc-feat-icon { font-size:2.2em; margin-bottom:16px; }
+.nc-feat-card h3 { font-size:1.1em; font-weight:800; margin-bottom:10px; color:var(--text); }
+.nc-feat-card p { font-size:0.9em; color:var(--text2); line-height:1.6; }
+
+/* ── GAMES GRID ── */
+.nc-games-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
+.nc-game-card {
+    background:#fff; border-radius:20px; overflow:hidden;
+    box-shadow:var(--shadow); transition:all 0.25s;
+    text-decoration:none; color:inherit;
+    display:flex; flex-direction:column;
+}
+.nc-game-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-lg); }
+.nc-game-banner { height:160px; display:flex; align-items:center; justify-content:center; }
+.nc-game-body { padding:20px; flex:1; display:flex; flex-direction:column; }
+.nc-game-name { font-size:1.2em; font-weight:800; margin-bottom:4px; }
+.nc-game-dev  { font-size:0.82em; color:var(--text3); margin-bottom:12px; }
+.nc-game-desc { font-size:0.88em; color:var(--text2); line-height:1.6; margin-bottom:16px; flex:1; }
+.nc-game-footer { display:flex; align-items:center; justify-content:space-between; padding-top:14px; border-top:1px solid #f0f0f0; }
+.nc-game-badge {
+    display:flex; align-items:center; gap:5px;
+    font-size:0.78em; color:var(--blue); font-weight:600;
+}
+.nc-game-badge-icon { font-size:1.1em; }
+.nc-game-btn {
+    background:var(--blue); color:#fff;
+    padding:8px 20px; border-radius:99px;
+    font-size:0.85em; font-weight:700; text-decoration:none;
+    transition:all 0.2s;
+}
+.nc-game-btn:hover { background:var(--blue-dark); }
+
+/* ── CONNECT SECTION ── */
+.nc-connect-box {
+    background:#fff; border-radius:24px; padding:48px;
+    box-shadow:var(--shadow-lg); text-align:center; max-width:600px; margin:0 auto;
+}
+.nc-connect-icon { font-size:3em; margin-bottom:20px; }
+.nc-connect-title { font-size:1.8em; font-weight:900; margin-bottom:12px; }
+.nc-connect-sub { font-size:1em; color:var(--text2); line-height:1.7; margin-bottom:32px; }
+.nc-connect-steps { display:flex; flex-direction:column; gap:16px; margin-bottom:32px; text-align:left; }
+.nc-connect-step { display:flex; align-items:flex-start; gap:14px; }
+.nc-connect-num {
+    width:32px; height:32px; border-radius:50%;
+    background:var(--blue); color:#fff;
+    font-weight:900; font-size:0.9em;
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.nc-connect-step-text h4 { font-weight:700; margin-bottom:3px; }
+.nc-connect-step-text p { font-size:0.88em; color:var(--text2); }
+
+/* ── STATS ── */
+.nc-stats { display:flex; gap:48px; justify-content:center; flex-wrap:wrap; margin-top:48px; }
+.nc-stat { text-align:center; }
+.nc-stat-num { font-size:2.8em; font-weight:900; color:#fff; }
+.nc-stat-lbl { font-size:0.9em; color:rgba(255,255,255,0.7); margin-top:4px; }
+
+/* ── FOOTER ── */
+.nc-footer { background:var(--bg-grad); padding:48px 24px 32px; }
+.nc-footer-inner {
+    max-width:1100px; margin:0 auto;
+    display:flex; justify-content:space-between; align-items:flex-start;
+    flex-wrap:wrap; gap:24px; padding-bottom:32px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+}
+.nc-footer-logo { display:flex; align-items:center; gap:8px; text-decoration:none; margin-bottom:8px; }
+.nc-footer-tagline { color:rgba(255,255,255,0.5); font-size:0.85em; }
+.nc-footer-links { display:flex; gap:24px; flex-wrap:wrap; }
+.nc-footer-links a { color:rgba(255,255,255,0.6); text-decoration:none; font-size:0.88em; transition:color 0.2s; }
+.nc-footer-links a:hover { color:#fff; }
+.nc-footer-bottom { max-width:1100px; margin:0 auto; padding-top:24px; color:rgba(255,255,255,0.35); font-size:0.82em; }
+
+/* ── PROFILE PAGE ── */
+.nc-profile-hero {
+    background:var(--bg-grad);
+    padding:60px 24px 80px; text-align:center; position:relative;
+}
+.nc-profile-hero::after {
+    content:''; position:absolute; bottom:0; left:0; right:0; height:50px;
+    background:var(--gray-bg); clip-path:ellipse(55% 100% at 50% 100%);
+}
+.nc-profile-av-ring {
+    width:100px; height:100px; border-radius:50%;
+    background:rgba(255,255,255,0.2); border:3px solid rgba(255,255,255,0.5);
+    display:flex; align-items:center; justify-content:center;
+    margin:0 auto 16px; font-size:3em;
+}
+.nc-profile-name-row { display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:6px; }
+.nc-profile-badge { background:#fff; color:var(--blue); font-size:0.75em; font-weight:900; padding:3px 8px; border-radius:5px; }
+.nc-profile-username { font-size:1.5em; font-weight:900; color:#fff; }
+.nc-profile-email { color:rgba(255,255,255,0.6); font-size:0.9em; }
+.nc-btn-edit { background:none; border:none; cursor:pointer; font-size:1em; opacity:0.6; transition:opacity 0.2s; }
+.nc-btn-edit:hover { opacity:1; }
+
+.nc-profile-body { background:var(--gray-bg); padding:40px 24px; }
+.nc-profile-inner { max-width:700px; margin:0 auto; display:flex; flex-direction:column; gap:20px; }
+.nc-card {
+    background:#fff; border-radius:20px; padding:28px;
+    box-shadow:var(--shadow);
+}
+.nc-card-title { font-size:0.82em; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:20px; }
+.nc-info-row { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #f5f5f5; }
+.nc-info-row:last-child { border-bottom:none; }
+.nc-info-label { font-size:0.88em; color:var(--text3); }
+.nc-info-value { font-size:0.9em; font-weight:600; }
+.nc-btn-save { background:var(--blue); color:#fff; border:none; padding:11px 28px; border-radius:99px; font-weight:700; font-size:0.9em; cursor:pointer; font-family:inherit; transition:all 0.2s; margin-top:16px; }
+.nc-btn-save:hover { background:var(--blue-dark); }
+.nc-btn-save:disabled { background:#ccc; cursor:not-allowed; }
+.nc-btn-danger { background:none; border:1.5px solid #ffcdd2; color:#e53935; padding:10px 22px; border-radius:99px; font-size:0.88em; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; margin-top:12px; }
+.nc-btn-danger:hover { background:#ffebee; }
+
+/* ── AVATAR GRID (profile) ── */
+.nc-av-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; margin-bottom:16px; }
+.nc-av-item { aspect-ratio:1; border-radius:12px; background:#f5f5f5; border:2px solid transparent; display:flex; align-items:center; justify-content:center; font-size:1.6em; cursor:pointer; transition:all 0.2s; position:relative; }
+.nc-av-item:hover { border-color:#90caf9; background:#e3f2fd; transform:scale(1.05); }
+.nc-av-item.selected { border-color:var(--blue); background:#e3f2fd; box-shadow:0 0 0 3px rgba(21,101,192,0.15); }
+.nc-av-item.selected::after { content:'✓'; position:absolute; bottom:2px; right:2px; background:var(--blue); color:#fff; font-size:0.35em; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; }
+
+/* ── CONNECTED GAMES ── */
+.nc-connected-game { display:flex; align-items:center; gap:14px; padding:14px; background:#f9f9f9; border-radius:14px; margin-bottom:10px; }
+.nc-cg-icon { width:48px; height:48px; border-radius:12px; overflow:hidden; flex-shrink:0; }
+.nc-cg-name { font-weight:700; font-size:0.95em; }
+.nc-cg-status { font-size:0.8em; color:#4caf50; margin-top:2px; }
+.nc-cg-open { margin-left:auto; background:var(--blue); color:#fff; text-decoration:none; padding:8px 18px; border-radius:99px; font-size:0.85em; font-weight:700; transition:all 0.2s; }
+.nc-cg-open:hover { background:var(--blue-dark); }
+
+@media(max-width:768px) {
+    .nc-hero-title { font-size:2.2em; }
+    .nc-nav { display:none; }
+    .nc-section-title { font-size:1.8em; }
+    .nc-connect-box { padding:28px 20px; }
+}
