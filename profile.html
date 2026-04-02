@@ -4,83 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nomchat ID — Profile</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="main.css">
 </head>
 <body>
 
-<header class="header">
-    <div class="header-inner">
-        <a href="index.html" class="logo">
-            <span class="logo-text">Nomchat</span>
-            <span class="logo-badge">ID</span>
+<header class="nc-header">
+    <div class="nc-header-inner">
+        <a href="index.html" class="nc-logo">
+            <span class="nc-logo-icon">💬</span>
+            <span class="nc-logo-name">NOMCHAT</span>
+            <span class="nc-logo-badge">ID</span>
         </a>
-        <div class="header-actions">
-            <button class="btn-header-logout" onclick="logout()">Log out</button>
+        <nav class="nc-nav">
+            <a href="index.html" class="nc-nav-link">Home</a>
+            <a href="games.html" class="nc-nav-link">Games</a>
+            <a href="connect.html" class="nc-nav-link">Connect</a>
+            <a href="profile.html" class="nc-nav-link active">Profile</a>
+        </nav>
+        <div id="header-user-area">
+            <button class="nc-header-logout" onclick="logout()">Sign out</button>
         </div>
     </div>
 </header>
 
-<!-- PROFILE HERO -->
-<div class="profile-hero">
-    <div class="profile-avatar-ring">
-        <div class="profile-avatar-img" id="profile-avatar">💀</div>
+<div class="nc-profile-hero">
+    <div class="nc-profile-av-ring" id="profile-av">💬</div>
+    <div class="nc-profile-name-row">
+        <span class="nc-profile-badge">ID</span>
+        <span class="nc-profile-username" id="profile-username">Player</span>
+        <button class="nc-btn-edit" onclick="editUsername()">✏️</button>
     </div>
-    <div class="profile-name-row">
-        <span class="id-badge-lg">ID</span>
-        <span class="profile-username" id="profile-username">Player</span>
-        <button class="btn-edit-name" onclick="editUsername()">✏️</button>
-    </div>
-    <p class="profile-email" id="profile-email">—</p>
+    <p class="nc-profile-email" id="profile-email">—</p>
 </div>
 
-<!-- PROFILE BODY -->
-<div class="profile-body">
+<div class="nc-profile-body">
+    <div class="nc-profile-inner">
 
-    <!-- Смена аватара -->
-    <div class="profile-section">
-        <h3 class="section-title">Change avatar</h3>
-        <div class="avatar-grid" id="profile-av-grid"></div>
-        <button class="btn-save" id="btn-save-av" onclick="saveAvatar()" disabled>Save avatar</button>
-    </div>
+        <div class="nc-card">
+            <div class="nc-card-title">Change avatar</div>
+            <div class="nc-av-grid" id="av-grid"></div>
+            <button class="nc-btn-save" id="btn-save-av" onclick="saveAvatar()" disabled>Save avatar</button>
+        </div>
 
-    <!-- Игры -->
-    <div class="profile-section">
-        <h3 class="section-title">Connected games</h3>
-        <div class="games-list">
-            <div class="game-item">
-                <div class="game-icon">
-                    <svg width="36" height="36" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#000"/><circle cx="50" cy="50" r="42" fill="#f5c400"/><ellipse cx="50" cy="47" rx="20" ry="19" fill="#000"/><ellipse cx="50" cy="47" rx="16" ry="15" fill="#f5c400"/><circle cx="41" cy="45" r="6" fill="#000"/><circle cx="59" cy="45" r="6" fill="#000"/><polygon points="50,55 46,63 54,63" fill="#000"/><ellipse cx="43" cy="33" rx="8" ry="4.5" fill="#fff" opacity="0.65" transform="rotate(-20,43,33)"/></svg>
+        <div class="nc-card">
+            <div class="nc-card-title">Connected games</div>
+            <div class="nc-connected-game">
+                <div class="nc-cg-icon">
+                    <svg width="48" height="48" viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#000"/><circle cx="50" cy="50" r="42" fill="#f5c400"/><ellipse cx="50" cy="47" rx="20" ry="19" fill="#000"/><ellipse cx="50" cy="47" rx="16" ry="15" fill="#f5c400"/><circle cx="41" cy="45" r="6" fill="#000"/><circle cx="59" cy="45" r="6" fill="#000"/><polygon points="50,55 46,63 54,63" fill="#000"/></svg>
                 </div>
-                <div class="game-info">
-                    <div class="game-name">ND Brawl</div>
-                    <div class="game-status connected">Connected</div>
+                <div>
+                    <div class="nc-cg-name">ND Brawl</div>
+                    <div class="nc-cg-status">● Connected</div>
                 </div>
-                <a href="../index.html" class="btn-game-open">Open</a>
+                <a href="https://nd-brawl-news.up.railway.app" target="_blank" class="nc-cg-open">Open</a>
             </div>
         </div>
-    </div>
 
-    <!-- Безопасность -->
-    <div class="profile-section">
-        <h3 class="section-title">Account</h3>
-        <div class="account-info">
-            <div class="info-row">
-                <span class="info-label">Email</span>
-                <span class="info-value" id="acc-email">—</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Member since</span>
-                <span class="info-value" id="acc-since">—</span>
-            </div>
-            <div class="info-row">
-                <span class="info-label">Last login</span>
-                <span class="info-value" id="acc-login">—</span>
-            </div>
+        <div class="nc-card">
+            <div class="nc-card-title">Account info</div>
+            <div class="nc-info-row"><span class="nc-info-label">Email</span><span class="nc-info-value" id="acc-email">—</span></div>
+            <div class="nc-info-row"><span class="nc-info-label">Member since</span><span class="nc-info-value" id="acc-since">—</span></div>
+            <div class="nc-info-row"><span class="nc-info-label">Last sign in</span><span class="nc-info-value" id="acc-login">—</span></div>
+            <button class="nc-btn-danger" onclick="deleteAccount()">Delete account</button>
         </div>
-        <button class="btn-danger-outline" onclick="deleteAccount()">Delete account</button>
-    </div>
 
+    </div>
 </div>
+
+<footer class="nc-footer">
+    <div class="nc-footer-inner">
+        <div>
+            <a href="index.html" class="nc-footer-logo">
+                <span class="nc-logo-icon">💬</span>
+                <span class="nc-logo-name">NOMCHAT</span>
+                <span class="nc-logo-badge">ID</span>
+            </a>
+        </div>
+        <div class="nc-footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+    </div>
+    <div class="nc-footer-bottom">© 2026 Nomchat ID. All rights reserved.</div>
+</footer>
 
 <script src="app.js"></script>
 <script src="profile.js"></script>
