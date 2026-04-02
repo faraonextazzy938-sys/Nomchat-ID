@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +23,7 @@
       <span class="sc-lbl" id="lbl2">Verify</span>
     </div>
 
-    <!-- Step 1 -->
+    <!-- Step 1: Email -->
     <div class="sc-panel active" id="s1">
       <h2 class="sc-title">Log in to Nomchat ID</h2>
       <p class="sc-sub">Enter your email and we'll send you a verification code.</p>
@@ -35,7 +34,7 @@
       <button class="sc-link">Want to register a Nomchat ID?</button>
     </div>
 
-    <!-- Step 2 -->
+    <!-- Step 2: Code -->
     <div class="sc-panel" id="s2">
       <h2 class="sc-title">Almost there!</h2>
       <p class="sc-sub">A verification code has been sent to your email<br><strong id="email-show"></strong></p>
@@ -49,16 +48,26 @@
       <button class="sc-link" onclick="resend()">Didn't receive the code?</button>
     </div>
 
-    <!-- Step 3 -->
+    <!-- Step 3: Username (только для новых) -->
     <div class="sc-panel" id="s3">
+      <h2 class="sc-title">Choose your name</h2>
+      <p class="sc-sub">Pick a unique username for your Nomchat ID. You can change it later.</p>
+      <input type="text" id="username-inp" class="sc-input" placeholder="Enter username" maxlength="30" autocomplete="off">
+      <p class="sc-note" id="username-hint" style="color:#999">3–30 characters. Letters, numbers and underscores only.</p>
+      <button class="sc-btn" id="btn-username" onclick="doSetUsername()" disabled>CONTINUE</button>
+      <button class="sc-btn-out" onclick="goStep(2)">GO BACK</button>
+    </div>
+
+    <!-- Step 4: Avatar -->
+    <div class="sc-panel" id="s4">
       <h2 class="sc-title">Choose your avatar</h2>
       <p class="sc-sub">Pick an icon for your Nomchat ID profile</p>
       <div class="sc-av-grid" id="av-grid"></div>
       <button class="sc-btn" id="btn-av" onclick="confirmAvatar()" disabled>CONFIRM</button>
     </div>
 
-    <!-- Step 4 -->
-    <div class="sc-panel" id="s4">
+    <!-- Step 5: Done -->
+    <div class="sc-panel" id="s5">
       <div class="sc-done-ring"><div class="sc-done-av" id="done-av">💬</div></div>
       <div class="sc-done-name">
         <span class="sc-id-badge">ID</span>

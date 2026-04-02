@@ -1,4 +1,3 @@
-
 const API = '';
 
 const AVATARS = [
@@ -24,35 +23,59 @@ const AVATARS = [
     { id:'shark',  type:'emoji', content:'🦈' },
 ];
 
-let state = { email: '', selectedAvatar: null, userId: null };
+let state = {
+    email: '',
+    userId: null,
+    isNewUser: false,
+    selectedAvatar: null
+};
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Проверка сессии с таймаутом
     try {
         const ctrl = new AbortController();
         setTimeout(() => ctrl.abort(), 3000);
-        const res = await fetch(`${API}/api/auth/me`, { credentials:'include', signal: ctrl.signal });
+        const res = await fetch(`${API}/api/auth/me`, { credentials:'include', signal:ctrl.signal });
         if (res.ok) { window.location.href = 'profile.html'; return; }
     } catch (_) {}
 
     buildGrid();
 
-    const emailInp = document.getElementById('email-inp');
-    const codeInp  = document.getElementById('code-inp');
-
-    emailInp.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-    codeInp.addEventListener('keydown',  e => { if (e.key === 'Enter') doVerify(); });
+    document.getElementById('email-inp').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+    document.getElementById('code-inp').addEventListener('keydown',  e => { if (e.key === 'Enter') doVerify(); });
+    document.getElementById('username-inp').addEventListener('keydown', e => { if (e.key === 'Enter') doSetUsername(); });
 
     // Активация кнопки при валидном email
-    emailInp.addEventListener('input', e => {
+    document.getElementById('email-inp').addEventListener('input', e => {
         const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e.target.value.trim());
         document.getElementById('btn-login').classList.toggle('ready', ok);
     });
 
     // Форматирование кода "123 456"
-    codeInp.addEventListener('input', e => {
+    document.getElementById('code-inp').addEventListener('input', e => {
         let v = e.target.value.replace(/\D/g, '').slice(0, 6);
         e.target.value = v.length > 3 ? v.slice(0,3) + ' ' + v.slice(3) : v;
+    });
+
+    // Валидация имени пользователя
+    document.getElementById('username-inp').addEventListener('input', e => {
+        const val  = e.target.value.trim();
+        const ok   = /^[a-zA-Z0-9_]{3,30}$/.test(val);
+        const hint = document.getElementById('username-hint');
+        const btn  = document.getElementById('btn-username');
+
+        if (!val) {
+            hint.style.color = '#999';
+            hint.textContent = '3–30 characters. Letters, numbers and underscores only.';
+        } else if (!ok) {
+            hint.style.color = '#e53935';
+            hint.textContent = val.length < 3 ? 'Too short (min 3 characters)' : 'Only letters, numbers and _ allowed';
+        } else {
+            hint.style.color = '#4caf50';
+            hint.textContent = '✓ Looks good!';
+        }
+        btn.classList.toggle('ready', ok);
+        btn.disabled = !ok;
     });
 });
 
@@ -66,6 +89,7 @@ function buildGrid() {
     }).join('');
 }
 
+// ── Шаг 1: отправить код ──────────────────────────────────────
 async function doLogin() {
     const email = document.getElementById('email-inp').value.trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { shake('email-inp'); return; }
@@ -76,34 +100,31 @@ async function doLogin() {
 
     try {
         const res  = await fetch(`${API}/api/auth/send-code`, {
-            method: 'POST', credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
+            method:'POST', credentials:'include',
+            headers:{'Content-Type':'application/json'},
             body: JSON.stringify({ email })
         });
         const data = await res.json();
-
         if (!res.ok) throw new Error(data.error || 'Error');
 
         state.email = email;
         document.getElementById('email-show').textContent = email;
 
-        const demoBox = document.getElementById('demo-box');
         if (data.demo_code) {
             document.getElementById('demo-val').textContent =
                 data.demo_code.slice(0,3) + ' ' + data.demo_code.slice(3);
-            demoBox.style.display = 'flex';
+            document.getElementById('demo-box').style.display = 'flex';
         } else {
-            demoBox.style.display = 'none';
+            document.getElementById('demo-box').style.display = 'none';
         }
         goStep(2);
-    } catch (e) {
-        shake('email-inp');
-    }
+    } catch (_) { shake('email-inp'); }
 
     btn.disabled = false;
     btn.innerHTML = 'LOG IN';
 }
 
+// ── Шаг 2: проверить код ──────────────────────────────────────
 async function doVerify() {
     const raw = document.getElementById('code-inp').value.replace(/\s/g, '');
     if (raw.length !== 6) { shake('code-inp'); return; }
@@ -114,19 +135,27 @@ async function doVerify() {
 
     try {
         const res  = await fetch(`${API}/api/auth/verify`, {
-            method: 'POST', credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
+            method:'POST', credentials:'include',
+            headers:{'Content-Type':'application/json'},
             body: JSON.stringify({ email: state.email, code: raw })
         });
         const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Invalid code');
 
-        if (res.ok) {
-            state.userId = data.user.id;
-            document.getElementById('done-username').textContent = data.user.username;
+        state.userId    = data.user.id;
+        state.isNewUser = data.is_new_user;
+
+        if (data.is_new_user) {
+            // Новый пользователь — предложить имя
+            document.getElementById('username-inp').value = data.user.username;
+            document.getElementById('username-inp').dispatchEvent(new Event('input'));
             goStep(3);
-            return;
+        } else {
+            // Существующий — сразу к аватару
+            document.getElementById('done-username').textContent = data.user.username;
+            goStep(4);
         }
-        throw new Error(data.error || 'Invalid code');
+        return;
     } catch (_) {
         shake('code-inp');
         document.getElementById('code-inp').value = '';
@@ -136,22 +165,38 @@ async function doVerify() {
     btn.innerHTML = 'CONTINUE';
 }
 
-async function resend() {
+// ── Шаг 3: установить имя ─────────────────────────────────────
+async function doSetUsername() {
+    const name = document.getElementById('username-inp').value.trim();
+    if (!/^[a-zA-Z0-9_]{3,30}$/.test(name)) { shake('username-inp'); return; }
+
+    const btn = document.getElementById('btn-username');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="sc-spinner"></span>Saving...';
+
     try {
-        const res  = await fetch(`${API}/api/auth/send-code`, {
-            method: 'POST', credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: state.email })
+        const res  = await fetch(`${API}/api/users/${state.userId}/username`, {
+            method:'POST', credentials:'include',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ username: name })
         });
         const data = await res.json();
-        if (data.demo_code) {
-            document.getElementById('demo-val').textContent =
-                data.demo_code.slice(0,3) + ' ' + data.demo_code.slice(3);
-            document.getElementById('demo-box').style.display = 'flex';
-        }
-    } catch (_) {}
+        if (!res.ok) throw new Error(data.error || 'Error');
+
+        document.getElementById('done-username').textContent = data.username;
+        goStep(4);
+        return;
+    } catch (e) {
+        document.getElementById('username-hint').style.color = '#e53935';
+        document.getElementById('username-hint').textContent = e.message || 'Username taken, try another';
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = 'CONTINUE';
+    btn.classList.add('ready');
 }
 
+// ── Шаг 4: выбор аватара ─────────────────────────────────────
 function selectAv(id, el) {
     document.querySelectorAll('.sc-av-item').forEach(i => i.classList.remove('selected'));
     el.classList.add('selected');
@@ -171,14 +216,32 @@ function confirmAvatar() {
 
     if (state.userId) {
         fetch(`${API}/api/users/${state.userId}/avatar`, {
-            method: 'POST', credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
+            method:'POST', credentials:'include',
+            headers:{'Content-Type':'application/json'},
             body: JSON.stringify({ avatar: state.selectedAvatar })
         }).catch(() => {});
     }
-    goStep(4);
+    goStep(5);
 }
 
+// ── Повторная отправка ────────────────────────────────────────
+async function resend() {
+    try {
+        const res  = await fetch(`${API}/api/auth/send-code`, {
+            method:'POST', credentials:'include',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email: state.email })
+        });
+        const data = await res.json();
+        if (data.demo_code) {
+            document.getElementById('demo-val').textContent =
+                data.demo_code.slice(0,3) + ' ' + data.demo_code.slice(3);
+            document.getElementById('demo-box').style.display = 'flex';
+        }
+    } catch (_) {}
+}
+
+// ── Навигация ─────────────────────────────────────────────────
 function goStep(n) {
     document.querySelectorAll('.sc-panel').forEach(p => p.classList.remove('active'));
     document.getElementById('s' + n).classList.add('active');
@@ -186,12 +249,12 @@ function goStep(n) {
     const fill = document.getElementById('fill');
     const l1   = document.getElementById('lbl1');
     const l2   = document.getElementById('lbl2');
-    const w    = { 1:'30%', 2:'70%', 3:'90%', 4:'100%' };
-    fill.style.width = w[n] || '30%';
+    const w    = { 1:'20%', 2:'55%', 3:'70%', 4:'88%', 5:'100%' };
+    fill.style.width = w[n] || '20%';
 
     if (n === 1) {
         l1.className = 'sc-lbl active'; l2.className = 'sc-lbl';
-    } else if (n === 2) {
+    } else if (n <= 2) {
         l1.className = 'sc-lbl done'; l2.className = 'sc-lbl active';
     } else {
         l1.className = 'sc-lbl done'; l2.className = 'sc-lbl done';

@@ -118,6 +118,7 @@ def api_verify():
 
     db.session.delete(vc)
     user = User.query.filter_by(email=email).first()
+    is_new = user is None
     if not user:
         user = User(email=email, username=email.split('@')[0])
         db.session.add(user)
@@ -127,7 +128,7 @@ def api_verify():
     session.clear()
     session['user_id'] = user.id
     session.permanent = True
-    return jsonify({'success': True, 'user': user.to_dict()})
+    return jsonify({'success': True, 'user': user.to_dict(), 'is_new_user': is_new})
 
 @app.route('/api/auth/me')
 @login_required
