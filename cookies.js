@@ -1,7 +1,21 @@
 // ── Nomchat ID — Cookie Consent Banner ───────────────────────
 
 (function () {
-    if (localStorage.getItem('nc_cookies_accepted')) return;
+    // ── Real cookie helpers ───────────────────────────────────
+    function setCookie(name, value, days) {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Lax`;
+    }
+
+    function getCookie(name) {
+        return document.cookie.split('; ').reduce((acc, part) => {
+            const [k, v] = part.split('=');
+            return k === name ? decodeURIComponent(v) : acc;
+        }, null);
+    }
+
+    // Already answered — don't show
+    if (getCookie('nc_consent')) return;
 
     const banner = document.createElement('div');
     banner.id = 'nc-cookie-banner';
@@ -149,8 +163,13 @@
     function dismiss(accepted) {
         banner.classList.remove('nc-cookie-show');
         banner.classList.add('nc-cookie-hide');
-        if (accepted) localStorage.setItem('nc_cookies_accepted', '1');
-        else localStorage.setItem('nc_cookies_accepted', 'declined');
+        // Set real cookie for 365 days
+        setCookie('nc_consent', accepted ? 'accepted' : 'declined', 365);
+        // Also set analytics/functional cookies if accepted
+        if (accepted) {
+            setCookie('nc_analytics', '1', 365);
+            setCookie('nc_functional', '1', 365);
+        }
         setTimeout(() => banner.remove(), 500);
     }
 
