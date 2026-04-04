@@ -140,6 +140,13 @@ async function doVerify() {
             body: JSON.stringify({ email: state.email, code: raw })
         });
         const data = await res.json();
+
+        // Handle ban
+        if (res.status === 403 && data.error === 'banned') {
+            showBanScreen(data.reason, data.banned_by);
+            return;
+        }
+
         if (!res.ok) throw new Error(data.error || 'Invalid code');
 
         state.userId    = data.user.id;
@@ -267,4 +274,29 @@ function shake(id) {
     void el.offsetWidth;
     el.classList.add('error');
     setTimeout(() => el.classList.remove('error'), 1500);
+}
+
+// ── Ban screen ────────────────────────────────────────────────
+function showBanScreen(reason, bannedBy) {
+    // Hide the card content and show ban message
+    const card = document.querySelector('.sc-card');
+    card.innerHTML = `
+        <div style="text-align:center;padding:8px 0">
+            <div style="font-size:3em;margin-bottom:16px;filter:drop-shadow(0 0 12px rgba(239,68,68,0.6))">🔨</div>
+            <div style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:6px 14px;display:inline-block;font-size:0.72em;font-weight:900;letter-spacing:2px;color:#ef4444;margin-bottom:20px;">ACCOUNT BANNED</div>
+            <h2 style="font-size:1.3em;font-weight:900;margin-bottom:10px;color:#f0f0ff">Access denied</h2>
+            <p style="font-size:0.88em;color:rgba(240,240,255,0.6);line-height:1.6;margin-bottom:20px">
+                Your account has been banned from Nomchat ID.
+            </p>
+            <div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:12px;padding:16px;text-align:left;margin-bottom:24px">
+                <div style="font-size:0.75em;font-weight:700;color:rgba(240,240,255,0.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Ban reason</div>
+                <div style="font-size:0.9em;color:#ef4444;font-weight:600">${reason || 'Нарушение правил'}</div>
+                ${bannedBy ? `<div style="font-size:0.75em;color:rgba(240,240,255,0.35);margin-top:6px">by ${bannedBy}</div>` : ''}
+            </div>
+            <p style="font-size:0.8em;color:rgba(240,240,255,0.35)">
+                If you believe this is a mistake, contact<br>
+                <a href="mailto:support@nomchat.id" style="color:#5b6ef5;text-decoration:none">support@nomchat.id</a>
+            </p>
+        </div>
+    `;
 }

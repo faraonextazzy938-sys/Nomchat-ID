@@ -45,8 +45,11 @@ with app.app_context():
             cur.execute("ALTER TABLE users ADD COLUMN is_creator BOOLEAN DEFAULT 0")
             print('[NOMCHAT] Migration: added is_creator column')
         if 'is_banned' not in existing:
-            cur.execute("ALTER TABLE users ADD COLUMN is_banned BOOLEAN DEFAULT 0")
+            cur.execute("ALTER TABLE users ADD COLUMN is_banned BOOLEAN DEFAULT 0 NOT NULL")
             print('[NOMCHAT] Migration: added is_banned column')
+        else:
+            # Fix NULL values — set to 0
+            cur.execute("UPDATE users SET is_banned = 0 WHERE is_banned IS NULL")
         if 'ban_reason' not in existing:
             cur.execute("ALTER TABLE users ADD COLUMN ban_reason TEXT")
             print('[NOMCHAT] Migration: added ban_reason column')
