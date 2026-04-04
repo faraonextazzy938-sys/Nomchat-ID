@@ -172,8 +172,8 @@ def send_welcome(to_email: str, username: str) -> bool:
     <td style="padding:24px 40px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
       <p style="color:rgba(240,240,255,0.25);font-size:0.78em;margin:0">
         © 2026 Nomchat ID &nbsp;·&nbsp;
-        <a href="https://docs.nomchat.up.railway.app/privacy.html" style="color:#5b6ef5;text-decoration:none">Privacy Policy</a> &nbsp;·&nbsp;
-        <a href="https://docs.nomchat.up.railway.app/terms.html" style="color:#5b6ef5;text-decoration:none">Terms of Service</a>
+        <a href="https://nomchat-id.up.railway.app/docs/privacy.html" style="color:#5b6ef5;text-decoration:none">Privacy Policy</a> &nbsp;·&nbsp;
+        <a href="https://nomchat-id.up.railway.app/docs/terms.html" style="color:#5b6ef5;text-decoration:none">Terms of Service</a>
       </p>
     </td>
   </tr>
