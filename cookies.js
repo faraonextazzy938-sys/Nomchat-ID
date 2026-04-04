@@ -24,7 +24,7 @@
             <div class="nc-cookie-icon">🍪</div>
             <div class="nc-cookie-text">
                 <strong>We use cookies</strong>
-                <p>We use cookies to keep you signed in, remember your language preference, and improve your experience. By continuing, you agree to our <a href="#">Cookie Policy</a>.</p>
+                <p>We use cookies to keep you signed in, remember your language preference, and improve your experience. By continuing, you agree to our <a href="https://docs.nomchat.up.railway.app/cookies.html" target="_blank">Cookie Policy</a>.</p>
             </div>
             <div class="nc-cookie-actions">
                 <button class="nc-cookie-decline" id="nc-cookie-decline">Decline</button>
