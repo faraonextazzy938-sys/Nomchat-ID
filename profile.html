@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nomchat ID — Profile</title>
     <link rel="stylesheet" href="main.css">
+    <style>
+        .lang-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 0.82em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 8px;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.25); }
+    </style>
 </head>
 <body>
 
@@ -16,14 +31,15 @@
             <span class="nc-logo-badge">ID</span>
         </a>
         <nav class="nc-nav">
-            <a href="index.html" class="nc-nav-link">Home</a>
-            <a href="games.html" class="nc-nav-link">Apps</a>
-            <a href="connect.html" class="nc-nav-link">Connect</a>
-            <a href="profile.html" class="nc-nav-link active">Profile</a>
+            <a href="index.html" class="nc-nav-link" data-i18n="nav.home">Home</a>
+            <a href="games.html" class="nc-nav-link" data-i18n="nav.apps">Apps</a>
+            <a href="connect.html" class="nc-nav-link" data-i18n="nav.connect">Connect</a>
+            <a href="profile.html" class="nc-nav-link active" data-i18n="nav.profile">Profile</a>
         </nav>
         <div id="header-user-area">
-            <button class="nc-header-logout" onclick="logout()">Sign out</button>
+            <button class="nc-header-logout" onclick="logout()" data-i18n="nav.signout">Sign out</button>
         </div>
+        <button class="lang-btn" id="langToggleBtn" onclick="toggleLang()">🇷🇺 RU</button>
     </div>
 </header>
 
@@ -41,13 +57,13 @@
     <div class="nc-profile-inner">
 
         <div class="nc-card">
-            <div class="nc-card-title">Change avatar</div>
+            <div class="nc-card-title" data-i18n="profile.avatar">Change avatar</div>
             <div class="nc-av-grid" id="av-grid"></div>
-            <button class="nc-btn-save" id="btn-save-av" onclick="saveAvatar()" disabled>Save avatar</button>
+            <button class="nc-btn-save" id="btn-save-av" onclick="saveAvatar()" disabled data-i18n="profile.save">Save avatar</button>
         </div>
 
         <div class="nc-card">
-            <div class="nc-card-title">Connected apps</div>
+            <div class="nc-card-title" data-i18n="profile.connected">Connected apps</div>
             <div class="nc-connected-game">
                 <div class="nc-cg-icon" style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
@@ -65,11 +81,11 @@
         </div>
 
         <div class="nc-card">
-            <div class="nc-card-title">Account info</div>
-            <div class="nc-info-row"><span class="nc-info-label">Email</span><span class="nc-info-value" id="acc-email">—</span></div>
-            <div class="nc-info-row"><span class="nc-info-label">Member since</span><span class="nc-info-value" id="acc-since">—</span></div>
-            <div class="nc-info-row"><span class="nc-info-label">Last sign in</span><span class="nc-info-value" id="acc-login">—</span></div>
-            <button class="nc-btn-danger" onclick="deleteAccount()">Delete account</button>
+            <div class="nc-card-title" data-i18n="profile.account">Account info</div>
+            <div class="nc-info-row"><span class="nc-info-label" data-i18n="profile.email">Email</span><span class="nc-info-value" id="acc-email">—</span></div>
+            <div class="nc-info-row"><span class="nc-info-label" data-i18n="profile.since">Member since</span><span class="nc-info-value" id="acc-since">—</span></div>
+            <div class="nc-info-row"><span class="nc-info-label" data-i18n="profile.login">Last sign in</span><span class="nc-info-value" id="acc-login">—</span></div>
+            <button class="nc-btn-danger" onclick="deleteAccount()" data-i18n="profile.delete">Delete account</button>
         </div>
 
     </div>
@@ -92,6 +108,7 @@
     <div class="nc-footer-bottom">© 2026 Nomchat ID. All rights reserved.</div>
 </footer>
 
+<script src="i18n.js"></script>
 <script src="app.js"></script>
 <script src="profile.js"></script>
 </body>
