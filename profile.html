@@ -51,6 +51,21 @@
         <button class="nc-btn-edit" onclick="editUsername()">✏️</button>
     </div>
     <p class="nc-profile-email" id="profile-email">—</p>
+    <!-- Admin badge — shown only for admins -->
+    <div id="admin-panel-btn" style="display:none;margin-top:16px">
+        <a href="admin.html" style="
+            display:inline-flex;align-items:center;gap:8px;
+            padding:10px 24px;border-radius:99px;
+            background:linear-gradient(135deg,#f59e0b,#ef4444);
+            color:#fff;font-weight:800;font-size:0.9em;
+            text-decoration:none;
+            box-shadow:0 4px 20px rgba(245,158,11,0.4);
+            transition:all 0.2s;
+        " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 28px rgba(245,158,11,0.55)'"
+           onmouseout="this.style.transform='';this.style.boxShadow='0 4px 20px rgba(245,158,11,0.4)'">
+            🛡️ Admin Panel
+        </a>
+    </div>
 </div>
 
 <div class="nc-profile-body">

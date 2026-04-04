@@ -18,6 +18,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('acc-since').textContent        = fmt(currentUser.created_at);
     document.getElementById('acc-login').textContent        = fmt(currentUser.last_login);
 
+    // Show admin button only for admins
+    if (currentUser.is_admin) {
+        document.getElementById('admin-panel-btn').style.display = 'block';
+    }
+
     buildProfileGrid();
 });
 
