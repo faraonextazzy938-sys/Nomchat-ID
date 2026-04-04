@@ -260,6 +260,52 @@ def admin_toggle(uid, admin):
     db.session.commit()
     return jsonify(u.to_dict())
 
+# ── Dev API ───────────────────────────────────────────────────
+
+DEV_EMAIL = 'nomchat@nom.ru'
+_site_disabled = False
+
+def dev_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        uid = session.get('user_id')
+        if not uid: return jsonify({'error': 'Unauthorized'}), 401
+        user = User.query.get(uid)
+        if not user or user.email != DEV_EMAIL:
+            return jsonify({'error': 'Forbidden'}), 403
+        return f(*args, **kwargs)
+    return decorated
+
+@app.route('/api/dev/status')
+@dev_required
+def dev_status():
+    return jsonify({'disabled': _site_disabled})
+
+@app.route('/api/dev/toggle-site', methods=['POST'])
+@dev_required
+def dev_toggle_site():
+    global _site_disabled
+    _site_disabled = not _site_disabled
+    return jsonify({'disabled': _site_disabled})
+
+# ── Site disabled middleware ──────────────────────────────────
+
+@app.before_request
+def check_site_disabled():
+    # Allow dev and static assets through
+    allowed = ['/api/dev/', '/api/auth/me', '/api/auth/logout',
+               '/offline.html', '/main.css', '/login.css']
+    if _site_disabled:
+        path = request.path
+        if any(path.startswith(a) for a in allowed):
+            return None
+        if path.endswith(('.css', '.js', '.png', '.ico', '.svg')):
+            return None
+        # Redirect to offline page for HTML requests
+        if 'text/html' in request.headers.get('Accept', ''):
+            return send_from_directory('.', 'offline.html')
+        return jsonify({'error': 'Site disabled', 'code': 35092}), 503
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
     app.run(debug=False, host='0.0.0.0', port=port)

@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // DEV badge for nomchat@nom.ru
     if (currentUser.email === 'nomchat@nom.ru') {
         document.getElementById('dev-badge').style.display = 'inline-block';
+        document.getElementById('dev-panel-btn').style.display = 'block';
     }
 
     buildProfileGrid();
