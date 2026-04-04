@@ -272,3 +272,57 @@ body::before {
 ::-webkit-scrollbar-thumb { background: rgba(91,110,245,0.3); border-radius: 99px; }
 
 @media(max-width:480px) { .sc-card { padding: 28px 20px 24px; } }
+
+/* ── Visual enhancements ── */
+body {
+    background: radial-gradient(ellipse 120% 80% at 50% -20%, rgba(91,110,245,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 80% 60% at 80% 100%, rgba(124,58,237,0.1) 0%, transparent 60%),
+                var(--bg) !important;
+}
+
+.sc-card {
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(91,110,245,0.12), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+    transition: box-shadow 0.3s;
+}
+.sc-card:hover {
+    box-shadow: 0 40px 96px rgba(0,0,0,0.65), 0 0 0 1px rgba(91,110,245,0.18), inset 0 1px 0 rgba(255,255,255,0.06) !important;
+}
+
+.sc-btn.ready {
+    position: relative; overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+}
+.sc-btn.ready::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.3s;
+}
+.sc-btn.ready:hover::before { opacity: 1; }
+.sc-btn.ready:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 10px 32px rgba(91,110,245,0.6) !important;
+}
+
+.sc-input {
+    transition: all 0.25s cubic-bezier(0.4,0,0.2,1) !important;
+}
+.sc-input:focus {
+    box-shadow: 0 0 0 4px rgba(91,110,245,0.15) !important;
+    transform: translateY(-1px);
+}
+
+.sc-av-item {
+    transition: all 0.2s cubic-bezier(0.4,0,0.2,1) !important;
+}
+.sc-av-item:hover {
+    transform: scale(1.1) !important;
+    box-shadow: 0 4px 16px rgba(91,110,245,0.3);
+}
+.sc-av-item.selected {
+    box-shadow: 0 0 0 3px rgba(91,110,245,0.3), 0 4px 20px rgba(91,110,245,0.25) !important;
+}
+
+.sc-fill {
+    box-shadow: 0 0 12px rgba(91,110,245,0.6) !important;
+}
