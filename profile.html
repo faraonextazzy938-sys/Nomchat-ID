@@ -88,19 +88,28 @@
 
         <div class="nc-card">
             <div class="nc-card-title" data-i18n="profile.connected">Connected apps</div>
-            <div class="nc-connected-game">
-                <div class="nc-cg-icon" style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+            <div id="connected-apps-list"></div>
+
+            <!-- Available apps to connect -->
+            <div style="margin-top:16px">
+                <div style="font-size:0.72em;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px">Available apps</div>
+                <div class="nc-connected-game" id="aichat-connect-row">
+                    <div class="nc-cg-icon" style="background:linear-gradient(135deg,#667eea,#764ba2);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 17L12 22L22 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 12L12 17L22 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div style="flex:1">
+                        <div class="nc-cg-name">AI Chat Pro</div>
+                        <div class="nc-cg-status" id="aichat-status" style="color:var(--text3)">Not connected</div>
+                    </div>
+                    <button id="aichat-connect-btn" onclick="toggleAppConnect('aichat')"
+                        style="padding:8px 16px;border-radius:99px;background:var(--grad);border:none;color:#fff;font-size:0.82em;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;box-shadow:0 3px 12px rgba(91,110,245,0.3)">
+                        Connect
+                    </button>
                 </div>
-                <div>
-                    <div class="nc-cg-name">AI Chat Pro</div>
-                    <div class="nc-cg-status">● Connected</div>
-                </div>
-                <a href="http://localhost:3000" target="_blank" class="nc-cg-open">Open</a>
             </div>
         </div>
 
