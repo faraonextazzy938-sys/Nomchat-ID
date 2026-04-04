@@ -99,3 +99,105 @@ def send_code(to_email: str, code: str) -> bool:
     except Exception as e:
         print(f'[NOMCHAT EMAIL] Error: {e}')
         return False
+
+
+def send_welcome(to_email: str, username: str) -> bool:
+    """Send welcome email to new user."""
+    if not EMAIL_USER or not EMAIL_PASSWORD:
+        print(f'[NOMCHAT EMAIL] Demo mode — welcome for {to_email}')
+        return False
+
+    html = f"""<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#0a0a0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#0a0a0f;padding:40px 20px">
+<tr><td align="center">
+<table width="520" cellpadding="0" cellspacing="0" style="background:#0f0f1a;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.08)">
+
+  <!-- Header -->
+  <tr>
+    <td style="background:linear-gradient(135deg,#5b6ef5 0%,#7c3aed 50%,#06b6d4 100%);padding:40px;text-align:center">
+      <div style="background:rgba(255,255,255,0.15);border-radius:14px;padding:14px 24px;display:inline-block">
+        <span style="font-size:1.8em;vertical-align:middle">💬</span>
+        <span style="color:#fff;font-size:1.4em;font-weight:900;letter-spacing:1px;vertical-align:middle;margin-left:10px">NOMCHAT</span>
+        <span style="background:#fff;color:#5b6ef5;font-size:0.65em;font-weight:900;padding:3px 8px;border-radius:5px;margin-left:8px;vertical-align:middle">ID</span>
+      </div>
+    </td>
+  </tr>
+
+  <!-- Body -->
+  <tr>
+    <td style="padding:48px 40px 36px;text-align:center">
+      <div style="font-size:3em;margin-bottom:20px">🎉</div>
+      <h1 style="color:#f0f0ff;font-size:1.6em;font-weight:900;margin:0 0 12px">Welcome to Nomchat ID!</h1>
+      <p style="color:rgba(240,240,255,0.6);font-size:1em;margin:0 0 32px;line-height:1.7">
+        Hey <strong style="color:#f0f0ff">{username}</strong>, your account is ready.<br>
+        One account. All your apps.
+      </p>
+
+      <!-- Features -->
+      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px">
+        <tr>
+          <td style="padding:12px;background:rgba(255,255,255,0.04);border-radius:12px;text-align:left;border:1px solid rgba(255,255,255,0.08)">
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:1.4em;padding-right:14px;vertical-align:top">🔐</td>
+                <td><strong style="color:#f0f0ff;font-size:0.9em">Zero-password security</strong><br><span style="color:rgba(240,240,255,0.5);font-size:0.82em">Sign in with email codes only</span></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr><td style="height:8px"></td></tr>
+        <tr>
+          <td style="padding:12px;background:rgba(255,255,255,0.04);border-radius:12px;text-align:left;border:1px solid rgba(255,255,255,0.08)">
+            <table cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:1.4em;padding-right:14px;vertical-align:top">🤖</td>
+                <td><strong style="color:#f0f0ff;font-size:0.9em">AI Chat Pro</strong><br><span style="color:rgba(240,240,255,0.5);font-size:0.82em">Your Nomchat ID works with AI Chat Pro</span></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <a href="https://nomchat-id.up.railway.app/profile.html"
+         style="display:inline-block;background:linear-gradient(135deg,#5b6ef5,#7c3aed);color:#fff;font-size:0.95em;font-weight:800;padding:14px 36px;border-radius:99px;text-decoration:none;box-shadow:0 6px 24px rgba(91,110,245,0.4)">
+        View my profile →
+      </a>
+    </td>
+  </tr>
+
+  <!-- Footer -->
+  <tr>
+    <td style="padding:24px 40px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)">
+      <p style="color:rgba(240,240,255,0.25);font-size:0.78em;margin:0">
+        © 2026 Nomchat ID &nbsp;·&nbsp;
+        <a href="https://docs.nomchat.up.railway.app/privacy.html" style="color:#5b6ef5;text-decoration:none">Privacy Policy</a> &nbsp;·&nbsp;
+        <a href="https://docs.nomchat.up.railway.app/terms.html" style="color:#5b6ef5;text-decoration:none">Terms of Service</a>
+      </p>
+    </td>
+  </tr>
+
+</table>
+</td></tr>
+</table>
+</body></html>"""
+
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = 'Welcome to Nomchat ID! 🎉'
+        msg['From']    = EMAIL_FROM
+        msg['To']      = to_email
+        msg.attach(MIMEText(html, 'html', 'utf-8'))
+
+        ctx = ssl.create_default_context()
+        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as smtp:
+            smtp.ehlo(); smtp.starttls(context=ctx); smtp.ehlo()
+            smtp.login(EMAIL_USER, EMAIL_PASSWORD)
+            smtp.sendmail(EMAIL_USER, to_email, msg.as_string())
+
+        print(f'[NOMCHAT EMAIL] Welcome sent to {to_email}')
+        return True
+    except Exception as e:
+        print(f'[NOMCHAT EMAIL] Welcome error: {e}')
+        return False
