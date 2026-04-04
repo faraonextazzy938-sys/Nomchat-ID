@@ -4,84 +4,116 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nomchat ID — Admin</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Inter',sans-serif;background:#f5f7fa;color:#111;min-height:100vh}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+    --bg:#0a0a0f; --bg2:#0f0f1a; --bg3:#13131f;
+    --surface:rgba(255,255,255,0.04); --surface2:rgba(255,255,255,0.07);
+    --border:rgba(255,255,255,0.08); --border2:rgba(255,255,255,0.14);
+    --text:#f0f0ff; --text2:rgba(240,240,255,0.6); --text3:rgba(240,240,255,0.35);
+    --accent:#5b6ef5; --accent2:#7c3aed; --cyan:#06b6d4;
+    --green:#10b981; --red:#ef4444; --gold:#f59e0b;
+    --grad:linear-gradient(135deg,#5b6ef5 0%,#7c3aed 50%,#06b6d4 100%);
+    --sb:220px;
+}
+body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; }
 
-/* Sidebar */
-.sb{position:fixed;top:0;left:0;bottom:0;width:240px;background:linear-gradient(180deg,#1a3a6b,#0d47a1);display:flex;flex-direction:column;z-index:100}
-.sb-logo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,0.1)}
-.sb-logo-row{display:flex;align-items:center;gap:8px}
-.sb-logo-icon{font-size:1.4em}
-.sb-logo-name{color:#fff;font-weight:900;font-size:1.05em}
-.sb-logo-badge{background:#fff;color:#1565c0;font-size:0.6em;font-weight:900;padding:2px 6px;border-radius:4px}
-.sb-sub{color:rgba(255,255,255,0.4);font-size:0.75em;margin-top:4px}
-.sb-nav{flex:1;padding:12px 0}
-.sb-item{display:flex;align-items:center;gap:10px;padding:12px 20px;color:rgba(255,255,255,0.7);cursor:pointer;transition:all 0.2s;font-size:0.92em;border-left:3px solid transparent}
-.sb-item:hover{background:rgba(255,255,255,0.08);color:#fff}
-.sb-item.active{background:rgba(255,255,255,0.12);color:#fff;border-left-color:#42a5f5}
-.sb-icon{font-size:1.1em;width:20px;text-align:center}
-.sb-foot{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1)}
-.sb-user{color:rgba(255,255,255,0.5);font-size:0.78em;margin-bottom:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.sb-logout{width:100%;padding:9px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.15);border-radius:8px;cursor:pointer;font-size:0.85em;font-family:inherit;transition:all 0.2s}
-.sb-logout:hover{background:rgba(255,255,255,0.15);color:#fff}
+/* ── SIDEBAR ── */
+.sb { width:var(--sb); flex-shrink:0; background:var(--bg2); border-right:1px solid var(--border); display:flex; flex-direction:column; position:fixed; top:0; left:0; bottom:0; z-index:50; }
+.sb-logo { padding:24px 20px; border-bottom:1px solid var(--border); }
+.sb-logo-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.sb-logo-icon { font-size:1.4em; filter:drop-shadow(0 0 8px rgba(91,110,245,0.6)); }
+.sb-logo-name { font-weight:900; font-size:1em; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; letter-spacing:1px; }
+.sb-logo-badge { background:var(--grad); color:#fff; font-size:0.55em; font-weight:900; padding:2px 7px; border-radius:5px; }
+.sb-sub { font-size:0.72em; color:var(--text3); font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+.sb-nav { flex:1; padding:12px 10px; display:flex; flex-direction:column; gap:2px; }
+.sb-item { display:flex; align-items:center; gap:10px; padding:11px 14px; border-radius:12px; color:var(--text2); cursor:pointer; transition:all 0.2s; font-size:0.88em; font-weight:600; }
+.sb-item:hover { background:var(--surface2); color:var(--text); }
+.sb-item.active { background:rgba(91,110,245,0.15); color:var(--text); border:1px solid rgba(91,110,245,0.2); }
+.sb-item.active .sb-icon { filter:drop-shadow(0 0 6px rgba(91,110,245,0.6)); }
+.sb-icon { font-size:1.1em; width:20px; text-align:center; }
+.sb-foot { padding:16px; border-top:1px solid var(--border); }
+.sb-user { font-size:0.75em; color:var(--text3); margin-bottom:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.sb-logout { width:100%; padding:9px; background:transparent; border:1px solid var(--border2); border-radius:10px; color:var(--text2); font-size:0.82em; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.sb-logout:hover { border-color:var(--red); color:var(--red); }
 
-/* Main */
-.main{margin-left:240px;padding:32px;min-height:100vh}
-.page{display:none}
-.page.active{display:block;animation:fadeIn 0.3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.page-title{font-size:1.6em;font-weight:800;margin-bottom:6px}
-.page-sub{color:#888;font-size:0.9em;margin-bottom:28px}
-
-/* Stats */
-.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-bottom:32px}
-.stat-card{background:#fff;border-radius:16px;padding:22px;box-shadow:0 2px 12px rgba(0,0,0,0.06)}
-.stat-lbl{font-size:0.82em;color:#888;margin-bottom:6px}
-.stat-val{font-size:2.2em;font-weight:900;color:#1565c0}
-
-/* Table */
-.tbl-wrap{background:#fff;border-radius:16px;box-shadow:0 2px 12px rgba(0,0,0,0.06);overflow:hidden}
-.tbl-head{padding:18px 22px;border-bottom:1px solid #f0f0f0;display:flex;align-items:center;justify-content:space-between}
-.tbl-head h3{font-size:1em;font-weight:700}
-.tbl-search{padding:8px 14px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:0.88em;font-family:inherit;outline:none;width:220px;transition:border-color 0.2s}
-.tbl-search:focus{border-color:#1565c0}
-table{width:100%;border-collapse:collapse}
-th{padding:11px 16px;text-align:left;font-size:0.78em;color:#aaa;font-weight:600;text-transform:uppercase;border-bottom:1px solid #f0f0f0}
-td{padding:13px 16px;font-size:0.88em;border-bottom:1px solid #fafafa;vertical-align:middle}
-tr:last-child td{border-bottom:none}
-tr:hover td{background:#fafafa}
-
-/* Badges */
-.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:0.75em;font-weight:700}
-.badge-admin{background:#e3f2fd;color:#1565c0}
-.badge-user{background:#f5f5f5;color:#888}
-
-/* Buttons */
-.btn{padding:7px 14px;border:none;border-radius:8px;font-size:0.82em;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s}
-.btn-blue{background:#1565c0;color:#fff}
-.btn-blue:hover{background:#1976d2}
-.btn-red{background:#ffebee;color:#e53935;border:1px solid #ffcdd2}
-.btn-red:hover{background:#ffcdd2}
-.btn-sm{padding:5px 12px;font-size:0.8em}
-.actions{display:flex;gap:6px;flex-wrap:wrap}
-
-/* Modal */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:center;justify-content:center}
-.modal-bg.open{display:flex}
-.modal{background:#fff;border-radius:20px;padding:32px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:fadeIn 0.25s ease}
-.modal h3{font-size:1.2em;font-weight:800;margin-bottom:20px}
-.form-row{margin-bottom:16px}
-.form-row label{display:block;font-size:0.82em;font-weight:700;color:#555;margin-bottom:6px;text-transform:uppercase}
-.form-row input,.form-row select{width:100%;padding:10px 14px;border:1.5px solid #e0e0e0;border-radius:8px;font-size:0.95em;font-family:inherit;outline:none;transition:border-color 0.2s}
-.form-row input:focus,.form-row select:focus{border-color:#1565c0}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
-.btn-cancel{background:#f5f5f5;color:#333}
-.btn-cancel:hover{background:#eee}
+/* ── MAIN ── */
+.main { margin-left:var(--sb); flex:1; padding:32px; min-height:100vh; }
+.page { display:none; animation:fadeIn 0.3s ease; }
+.page.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+.page-title { font-size:1.6em; font-weight:900; margin-bottom:4px; }
+.page-sub { color:var(--text3); font-size:0.88em; margin-bottom:28px; }
     </style>
 </head>
 <body>
+
+<style>
+/* ── STATS ── */
+.stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:32px; }
+.stat-card { background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:24px; transition:all 0.2s; position:relative; overflow:hidden; }
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--grad); opacity:0; transition:opacity 0.3s; }
+.stat-card:hover { border-color:var(--border2); transform:translateY(-2px); }
+.stat-card:hover::before { opacity:1; }
+.stat-icon { font-size:1.6em; margin-bottom:12px; }
+.stat-lbl { font-size:0.78em; color:var(--text3); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+.stat-val { font-size:2.2em; font-weight:900; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; }
+
+/* ── TABLE ── */
+.tbl-wrap { background:var(--surface); border:1px solid var(--border); border-radius:18px; overflow:hidden; }
+.tbl-head { padding:18px 22px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.tbl-head h3 { font-size:0.95em; font-weight:800; }
+.tbl-search { padding:9px 14px; background:var(--surface2); border:1px solid var(--border2); border-radius:10px; color:var(--text); font-size:0.85em; font-family:inherit; outline:none; width:240px; transition:all 0.2s; }
+.tbl-search:focus { border-color:rgba(91,110,245,0.5); box-shadow:0 0 0 3px rgba(91,110,245,0.1); }
+.tbl-search::placeholder { color:var(--text3); }
+table { width:100%; border-collapse:collapse; }
+th { padding:11px 16px; text-align:left; font-size:0.72em; color:var(--text3); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border); }
+td { padding:13px 16px; font-size:0.86em; border-bottom:1px solid rgba(255,255,255,0.03); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:var(--surface2); }
+
+/* ── BADGES ── */
+.badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:99px; font-size:0.75em; font-weight:700; }
+.badge-admin { background:rgba(91,110,245,0.15); color:var(--accent); border:1px solid rgba(91,110,245,0.2); }
+.badge-user  { background:var(--surface2); color:var(--text3); border:1px solid var(--border); }
+
+/* ── BUTTONS ── */
+.btn { padding:7px 14px; border:none; border-radius:8px; font-size:0.8em; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.btn-grad { background:var(--grad); color:#fff; box-shadow:0 3px 12px rgba(91,110,245,0.3); }
+.btn-grad:hover { transform:translateY(-1px); box-shadow:0 5px 18px rgba(91,110,245,0.45); }
+.btn-ghost { background:var(--surface2); color:var(--text2); border:1px solid var(--border2); }
+.btn-ghost:hover { color:var(--text); border-color:rgba(91,110,245,0.4); }
+.btn-red { background:rgba(239,68,68,0.1); color:var(--red); border:1px solid rgba(239,68,68,0.2); }
+.btn-red:hover { background:rgba(239,68,68,0.2); }
+.btn-sm { padding:5px 11px; font-size:0.76em; }
+.actions { display:flex; gap:6px; flex-wrap:wrap; }
+
+/* ── MODAL ── */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:200; align-items:center; justify-content:center; backdrop-filter:blur(4px); }
+.modal-bg.open { display:flex; }
+.modal { background:var(--bg2); border:1px solid var(--border2); border-radius:20px; padding:32px; width:100%; max-width:460px; box-shadow:0 32px 80px rgba(0,0,0,0.6); animation:fadeIn 0.25s ease; }
+.modal h3 { font-size:1.2em; font-weight:900; margin-bottom:20px; }
+.form-row { margin-bottom:16px; }
+.form-row label { display:block; font-size:0.75em; font-weight:700; color:var(--text3); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.5px; }
+.form-row input { width:100%; padding:11px 14px; background:var(--surface2); border:1px solid var(--border2); border-radius:10px; color:var(--text); font-size:0.95em; font-family:inherit; outline:none; transition:all 0.2s; }
+.form-row input:focus { border-color:rgba(91,110,245,0.5); box-shadow:0 0 0 3px rgba(91,110,245,0.1); }
+.form-row input::placeholder { color:var(--text3); }
+.modal-note { font-size:0.82em; color:var(--text3); margin-top:-8px; margin-bottom:16px; line-height:1.5; }
+.modal-actions { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+
+/* ── TOAST ── */
+.toast { position:fixed; bottom:24px; right:24px; padding:14px 20px; border-radius:12px; font-size:0.88em; font-weight:700; z-index:999; animation:toastIn 0.3s ease; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+.toast-ok  { background:var(--green); color:#fff; }
+.toast-err { background:var(--red); color:#fff; }
+@keyframes toastIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── EMPTY ── */
+.empty { text-align:center; padding:48px; color:var(--text3); font-size:0.9em; }
+.empty-icon { font-size:2.5em; margin-bottom:12px; }
+
+/* ── AVATAR ── */
+.av-cell { font-size:1.5em; line-height:1; }
+</style>
 
 <aside class="sb">
     <div class="sb-logo">
@@ -109,10 +141,10 @@ tr:hover td{background:#fafafa}
     <div class="page active" id="page-dashboard">
         <div class="page-title">Dashboard</div>
         <div class="page-sub">Overview of Nomchat ID platform</div>
-        <div class="stats">
-            <div class="stat-card"><div class="stat-lbl">Total users</div><div class="stat-val" id="s-users">—</div></div>
-            <div class="stat-card"><div class="stat-lbl">Admins</div><div class="stat-val" id="s-admins">—</div></div>
-            <div class="stat-card"><div class="stat-lbl">New today</div><div class="stat-val" id="s-today">—</div></div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-lbl">Total users</div><div class="stat-val" id="s-users">—</div></div>
+            <div class="stat-card"><div class="stat-icon">🛡️</div><div class="stat-lbl">Admins</div><div class="stat-val" id="s-admins">—</div></div>
+            <div class="stat-card"><div class="stat-icon">🆕</div><div class="stat-lbl">New today</div><div class="stat-val" id="s-today">—</div></div>
         </div>
     </div>
 
@@ -123,11 +155,11 @@ tr:hover td{background:#fafafa}
         <div class="tbl-wrap">
             <div class="tbl-head">
                 <h3>All users</h3>
-                <input class="tbl-search" id="user-search" placeholder="Search by email or username..." oninput="filterUsers()">
+                <input class="tbl-search" id="user-search" placeholder="Search by email or username…" oninput="filterUsers()">
             </div>
             <table>
-                <thead><tr><th>ID</th><th>Avatar</th><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Last login</th><th>Actions</th></tr></thead>
-                <tbody id="users-tbody"></tbody>
+                <thead><tr><th>#</th><th>Avatar</th><th>Username</th><th>Email</th><th>Role</th><th>Joined</th><th>Last login</th><th>Actions</th></tr></thead>
+                <tbody id="users-tbody"><tr><td colspan="8"><div class="empty"><div class="empty-icon">⏳</div>Loading…</div></td></tr></tbody>
             </table>
         </div>
     </div>
@@ -139,10 +171,10 @@ tr:hover td{background:#fafafa}
         <div class="tbl-wrap">
             <div class="tbl-head">
                 <h3>Admins</h3>
-                <button class="btn btn-blue" onclick="openAddAdmin()">+ Add admin</button>
+                <button class="btn btn-grad" onclick="openAddAdmin()">+ Add admin</button>
             </div>
             <table>
-                <thead><tr><th>ID</th><th>Email</th><th>Username</th><th>Added</th><th>Actions</th></tr></thead>
+                <thead><tr><th>#</th><th>Email</th><th>Username</th><th>Joined</th><th>Actions</th></tr></thead>
                 <tbody id="admins-tbody"></tbody>
             </table>
         </div>
@@ -153,15 +185,15 @@ tr:hover td{background:#fafafa}
 <!-- Add admin modal -->
 <div class="modal-bg" id="add-admin-modal">
     <div class="modal">
-        <h3>Add admin</h3>
+        <h3>➕ Add admin</h3>
         <div class="form-row">
-            <label>Email</label>
+            <label>Email address</label>
             <input type="email" id="new-admin-email" placeholder="user@example.com">
         </div>
-        <p style="font-size:0.85em;color:#888;margin-top:-8px">The user must already have a Nomchat ID account.</p>
+        <p class="modal-note">The user must already have a Nomchat ID account. They will get full admin access.</p>
         <div class="modal-actions">
-            <button class="btn btn-cancel" onclick="closeModal()">Cancel</button>
-            <button class="btn btn-blue" onclick="addAdmin()">Make admin</button>
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-grad" onclick="addAdmin()">Make admin</button>
         </div>
     </div>
 </div>
@@ -170,9 +202,10 @@ tr:hover td{background:#fafafa}
 const API = '';
 let allUsers = [];
 
+// ── Init ──────────────────────────────────────────────────────
 async function init() {
     try {
-        const res = await fetch(`${API}/api/auth/me`, { credentials:'include' });
+        const res = await fetch(`${API}/api/auth/me`, { credentials: 'include' });
         if (!res.ok) { window.location.href = 'login.html'; return; }
         const user = await res.json();
         if (!user.is_admin) { window.location.href = 'index.html'; return; }
@@ -182,10 +215,11 @@ async function init() {
 }
 
 async function logout() {
-    await fetch(`${API}/api/auth/logout`, { method:'POST', credentials:'include' });
+    await fetch(`${API}/api/auth/logout`, { method: 'POST', credentials: 'include' });
     window.location.href = 'login.html';
 }
 
+// ── Navigation ────────────────────────────────────────────────
 function showPage(name, el) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.sb-item').forEach(n => n.classList.remove('active'));
@@ -196,41 +230,58 @@ function showPage(name, el) {
     if (name === 'admins')    loadAdmins();
 }
 
+// ── Dashboard ─────────────────────────────────────────────────
 async function loadDashboard() {
     const [statsRes, usersRes] = await Promise.all([
-        fetch(`${API}/api/admin/stats`, { credentials:'include' }),
-        fetch(`${API}/api/admin/users`, { credentials:'include' })
+        fetch(`${API}/api/admin/stats`, { credentials: 'include' }),
+        fetch(`${API}/api/admin/users`, { credentials: 'include' })
     ]);
     const stats = await statsRes.json();
     const users = await usersRes.json();
 
-    document.getElementById('s-users').textContent  = stats.users;
-    document.getElementById('s-admins').textContent = stats.admins;
+    animateNum('s-users',  stats.users);
+    animateNum('s-admins', stats.admins);
 
     const today = new Date().toDateString();
     const newToday = users.filter(u => u.created_at && new Date(u.created_at).toDateString() === today).length;
-    document.getElementById('s-today').textContent = newToday;
+    animateNum('s-today', newToday);
 }
 
+function animateNum(id, target) {
+    const el = document.getElementById(id);
+    let n = 0, step = Math.max(1, Math.ceil(target / 30));
+    const t = setInterval(() => {
+        n = Math.min(n + step, target);
+        el.textContent = n;
+        if (n >= target) clearInterval(t);
+    }, 30);
+}
+
+// ── Users ─────────────────────────────────────────────────────
 async function loadUsers() {
-    const res = await fetch(`${API}/api/admin/users`, { credentials:'include' });
+    document.getElementById('users-tbody').innerHTML = '<tr><td colspan="8"><div class="empty"><div class="empty-icon">⏳</div>Loading…</div></td></tr>';
+    const res = await fetch(`${API}/api/admin/users`, { credentials: 'include' });
     allUsers  = await res.json();
     renderUsers(allUsers);
 }
 
 function renderUsers(users) {
+    if (!users.length) {
+        document.getElementById('users-tbody').innerHTML = '<tr><td colspan="8"><div class="empty"><div class="empty-icon">👤</div>No users found</div></td></tr>';
+        return;
+    }
     document.getElementById('users-tbody').innerHTML = users.map(u => `
         <tr>
-            <td style="color:#aaa">#${u.id}</td>
-            <td style="font-size:1.4em">${u.avatar || '💬'}</td>
-            <td><strong>${u.username}</strong></td>
-            <td>${u.email}</td>
-            <td><span class="badge badge-${u.is_admin ? 'admin' : 'user'}">${u.is_admin ? 'Admin' : 'User'}</span></td>
-            <td>${fmt(u.created_at)}</td>
-            <td>${fmt(u.last_login)}</td>
+            <td style="color:var(--text3);font-size:0.8em">#${u.id}</td>
+            <td class="av-cell">${u.avatar || '💬'}</td>
+            <td><strong>${esc(u.username)}</strong></td>
+            <td style="color:var(--text2)">${esc(u.email)}</td>
+            <td><span class="badge badge-${u.is_admin ? 'admin' : 'user'}">${u.is_admin ? '🛡️ Admin' : '👤 User'}</span></td>
+            <td style="color:var(--text3)">${fmt(u.created_at)}</td>
+            <td style="color:var(--text3)">${fmt(u.last_login)}</td>
             <td><div class="actions">
-                <button class="btn btn-sm btn-blue" onclick="toggleAdmin(${u.id})">${u.is_admin ? 'Remove admin' : 'Make admin'}</button>
-                <button class="btn btn-sm btn-red" onclick="deleteUser(${u.id})">Delete</button>
+                <button class="btn btn-sm btn-ghost" onclick="toggleAdmin(${u.id})">${u.is_admin ? 'Remove admin' : 'Make admin'}</button>
+                <button class="btn btn-sm btn-red" onclick="deleteUser(${u.id}, '${esc(u.username)}')">Delete</button>
             </div></td>
         </tr>`).join('');
 }
@@ -242,35 +293,39 @@ function filterUsers() {
     ));
 }
 
+// ── Admins ────────────────────────────────────────────────────
 async function loadAdmins() {
-    const res    = await fetch(`${API}/api/admin/users`, { credentials:'include' });
+    const res    = await fetch(`${API}/api/admin/users`, { credentials: 'include' });
     const users  = await res.json();
     const admins = users.filter(u => u.is_admin);
     document.getElementById('admins-tbody').innerHTML = admins.map(u => `
         <tr>
-            <td style="color:#aaa">#${u.id}</td>
-            <td>${u.email}</td>
-            <td>${u.username}</td>
-            <td>${fmt(u.created_at)}</td>
+            <td style="color:var(--text3);font-size:0.8em">#${u.id}</td>
+            <td style="color:var(--text2)">${esc(u.email)}</td>
+            <td><strong>${esc(u.username)}</strong></td>
+            <td style="color:var(--text3)">${fmt(u.created_at)}</td>
             <td><button class="btn btn-sm btn-red" onclick="toggleAdmin(${u.id})">Remove admin</button></td>
         </tr>`).join('');
 }
 
+// ── Actions ───────────────────────────────────────────────────
 async function toggleAdmin(id) {
-    await fetch(`${API}/api/admin/users/${id}/toggle-admin`, { method:'POST', credentials:'include' });
-    loadUsers();
-    loadAdmins();
+    const res = await fetch(`${API}/api/admin/users/${id}/toggle-admin`, { method: 'POST', credentials: 'include' });
+    if (res.ok) { toast('Role updated', 'ok'); loadUsers(); loadAdmins(); }
+    else toast('Error updating role', 'err');
 }
 
-async function deleteUser(id) {
-    if (!confirm('Delete this user permanently?')) return;
-    await fetch(`${API}/api/admin/users/${id}`, { method:'DELETE', credentials:'include' });
-    loadUsers();
+async function deleteUser(id, name) {
+    if (!confirm(`Delete user "${name}" permanently? This cannot be undone.`)) return;
+    const res = await fetch(`${API}/api/admin/users/${id}`, { method: 'DELETE', credentials: 'include' });
+    if (res.ok) { toast('User deleted', 'ok'); loadUsers(); }
+    else toast('Cannot delete this user', 'err');
 }
 
 function openAddAdmin() {
     document.getElementById('new-admin-email').value = '';
     document.getElementById('add-admin-modal').classList.add('open');
+    setTimeout(() => document.getElementById('new-admin-email').focus(), 100);
 }
 
 function closeModal() {
@@ -280,19 +335,39 @@ function closeModal() {
 async function addAdmin() {
     const email = document.getElementById('new-admin-email').value.trim();
     if (!email) return;
-    const res  = await fetch(`${API}/api/admin/users`, { credentials:'include' });
+    const res   = await fetch(`${API}/api/admin/users`, { credentials: 'include' });
     const users = await res.json();
     const user  = users.find(u => u.email === email);
-    if (!user) { alert('User not found. They must register first.'); return; }
-    await fetch(`${API}/api/admin/users/${user.id}/toggle-admin`, { method:'POST', credentials:'include' });
+    if (!user) { toast('User not found — they must register first', 'err'); return; }
+    if (user.is_admin) { toast('Already an admin', 'err'); return; }
+    await fetch(`${API}/api/admin/users/${user.id}/toggle-admin`, { method: 'POST', credentials: 'include' });
+    toast(`${user.username} is now an admin`, 'ok');
     closeModal();
     loadAdmins();
 }
 
+// ── Helpers ───────────────────────────────────────────────────
 function fmt(iso) {
     if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('en-US', { day:'2-digit', month:'short', year:'numeric' });
+    return new Date(iso).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
 }
+
+function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function toast(msg, type) {
+    const t = document.createElement('div');
+    t.className = `toast toast-${type}`;
+    t.textContent = (type === 'ok' ? '✓ ' : '✕ ') + msg;
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.3s'; setTimeout(() => t.remove(), 300); }, 2500);
+}
+
+// Close modal on backdrop click
+document.getElementById('add-admin-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+});
 
 init();
 </script>
