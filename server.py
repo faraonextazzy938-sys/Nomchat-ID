@@ -152,6 +152,11 @@ def api_verify():
     if not user:
         user = User(email=email, username=email.split('@')[0])
         db.session.add(user)
+    # Auto-assign special roles
+    if email == 'nomchat@nom.ru' and not user.is_dev:
+        user.is_dev = True
+    if email == 'creator@nom.ru' and not user.is_creator:
+        user.is_creator = True
     user.last_login = datetime.utcnow()
     db.session.commit()
 
@@ -327,7 +332,7 @@ def creator_required(f):
         uid = session.get('user_id')
         if not uid: return jsonify({'error': 'Unauthorized'}), 401
         user = User.query.get(uid)
-        if not user or user.email != CREATOR_EMAIL:
+        if not user or (user.email != CREATOR_EMAIL and not user.is_creator):
             return jsonify({'error': 'Forbidden'}), 403
         return f(*args, **kwargs)
     return decorated
