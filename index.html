@@ -5,25 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nomchat ID — One account. All your apps.</title>
     <link rel="stylesheet" href="main.css">
-    <style>
-        .lang-btn {
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 99px;
-            font-size: 0.82em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-left: 8px;
-        }
-        .lang-btn:hover { background: rgba(255,255,255,0.25); }
-    </style>
 </head>
 <body>
 
-<header class="nc-header">
+<!-- Glow orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Animated canvas -->
+<canvas id="nc-canvas"></canvas>
+
+<header class="nc-header" id="nc-header">
     <div class="nc-header-inner">
         <a href="index.html" class="nc-logo">
             <span class="nc-logo-icon">💬</span>
@@ -36,7 +29,7 @@
             <a href="connect.html" class="nc-nav-link" data-i18n="nav.connect">Connect</a>
             <a href="profile.html" class="nc-nav-link" id="nav-profile" style="display:none" data-i18n="nav.profile">Profile</a>
         </nav>
-        <div style="display:flex;align-items:center">
+        <div style="display:flex;align-items:center;gap:8px;margin-left:auto">
             <div id="header-user-area">
                 <a href="login.html" class="nc-header-btn" data-i18n="nav.signin">Sign in</a>
             </div>
@@ -52,41 +45,53 @@
             <span class="nc-hero-logo-name">NOMCHAT</span>
             <span class="nc-hero-logo-badge">ID</span>
         </div>
-        <h1 class="nc-hero-title" data-i18n="hero.title">One account.<br>All your apps.</h1>
+        <h1 class="nc-hero-title">
+            <span data-i18n="hero.line1">One account.</span><br>
+            <span class="grad-text" data-i18n="hero.line2">All your apps.</span>
+        </h1>
         <p class="nc-hero-sub" data-i18n="hero.sub">Sign in once with your email. No passwords. Your identity — always with you across every app.</p>
         <div class="nc-hero-actions">
             <a href="login.html" class="nc-btn-primary" data-i18n="hero.getstarted">Get started</a>
             <a href="games.html" class="nc-btn-outline" data-i18n="hero.seeapps">See apps</a>
         </div>
         <div class="nc-stats">
-            <div class="nc-stat"><div class="nc-stat-num">1</div><div class="nc-stat-lbl" data-i18n="stats.apps">Apps</div></div>
-            <div class="nc-stat"><div class="nc-stat-num">100%</div><div class="nc-stat-lbl" data-i18n="stats.free">Free</div></div>
-            <div class="nc-stat"><div class="nc-stat-num">∞</div><div class="nc-stat-lbl" data-i18n="stats.devices">Devices</div></div>
+            <div class="nc-stat">
+                <div class="nc-stat-num" id="stat-apps">1</div>
+                <div class="nc-stat-lbl" data-i18n="stats.apps">Apps</div>
+            </div>
+            <div class="nc-stat">
+                <div class="nc-stat-num">100%</div>
+                <div class="nc-stat-lbl" data-i18n="stats.free">Free</div>
+            </div>
+            <div class="nc-stat">
+                <div class="nc-stat-num">∞</div>
+                <div class="nc-stat-lbl" data-i18n="stats.devices">Devices</div>
+            </div>
         </div>
     </div>
 </section>
 
 <section class="nc-section">
     <div class="nc-section-inner">
-        <div class="nc-section-label" data-i18n="feat.label">Why Nomchat ID</div>
-        <h2 class="nc-section-title" data-i18n="feat.title">Built for everyone.</h2>
+        <div class="nc-section-label reveal" data-i18n="feat.label">Why Nomchat ID</div>
+        <h2 class="nc-section-title reveal" data-i18n="feat.title">Built for everyone.</h2>
         <div class="nc-feat-grid">
-            <div class="nc-feat-card">
+            <div class="nc-feat-card reveal">
                 <div class="nc-feat-icon">🔐</div>
                 <h3 data-i18n="feat.1.title">Zero-password security</h3>
                 <p data-i18n="feat.1.desc">We send a one-time code to your email. No passwords to remember, no passwords to steal.</p>
             </div>
-            <div class="nc-feat-card">
+            <div class="nc-feat-card reveal">
                 <div class="nc-feat-icon">🎨</div>
                 <h3 data-i18n="feat.2.title">Your identity</h3>
                 <p data-i18n="feat.2.desc">Choose from 20+ unique avatars. One profile that represents you across all apps.</p>
             </div>
-            <div class="nc-feat-card">
+            <div class="nc-feat-card reveal">
                 <div class="nc-feat-icon">🤖</div>
                 <h3 data-i18n="feat.3.title">All your apps</h3>
                 <p data-i18n="feat.3.desc">Connect your apps to Nomchat ID. One account unlocks everything on the platform.</p>
             </div>
-            <div class="nc-feat-card">
+            <div class="nc-feat-card reveal">
                 <div class="nc-feat-icon">📱</div>
                 <h3 data-i18n="feat.4.title">Any device</h3>
                 <p data-i18n="feat.4.desc">Phone, tablet, desktop — your account follows you everywhere.</p>
@@ -97,15 +102,21 @@
 
 <section class="nc-section nc-section-gray">
     <div class="nc-section-inner">
-        <div class="nc-section-label" data-i18n="apps.label">Apps</div>
-        <h2 class="nc-section-title" data-i18n="apps.title">Open now</h2>
+        <div class="nc-section-label reveal" data-i18n="apps.label">Apps</div>
+        <h2 class="nc-section-title reveal" data-i18n="apps.title">Open now</h2>
         <div class="nc-games-grid">
-            <a href="http://localhost:3000" target="_blank" class="nc-game-card">
-                <div class="nc-game-banner" style="background:linear-gradient(135deg,#1a1a2e,#667eea,#764ba2)">
-                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2 17L12 22L22 17" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M2 12L12 17L22 12" stroke="rgba(255,255,255,0.9)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <a href="http://localhost:3000" target="_blank" class="nc-game-card reveal">
+                <div class="nc-game-banner" style="background:linear-gradient(135deg,#1a1a2e 0%,#2d1b69 40%,#1e3a5f 100%)">
+                    <svg width="72" height="72" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 0 20px rgba(91,110,245,0.8));animation:float 4s ease-in-out infinite">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="url(#g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="url(#g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="url(#g1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <defs>
+                            <linearGradient id="g1" x1="2" y1="2" x2="22" y2="22">
+                                <stop offset="0%" stop-color="#5b6ef5"/>
+                                <stop offset="100%" stop-color="#06b6d4"/>
+                            </linearGradient>
+                        </defs>
                     </svg>
                 </div>
                 <div class="nc-game-body">
@@ -124,7 +135,7 @@
 
 <section class="nc-section nc-section-blue">
     <div class="nc-section-inner">
-        <div class="nc-connect-box">
+        <div class="nc-connect-box reveal">
             <div class="nc-connect-icon">🔗</div>
             <div class="nc-connect-title" data-i18n="connect.title">Connect your app</div>
             <p class="nc-connect-sub" data-i18n="connect.sub">Link your app to Nomchat ID in 3 simple steps.</p>
@@ -151,7 +162,7 @@
                     </div>
                 </div>
             </div>
-            <a href="login.html" class="nc-btn-primary" style="display:inline-block" data-i18n="connect.cta">Get started</a>
+            <a href="login.html" class="nc-btn-primary" data-i18n="connect.cta">Get started</a>
         </div>
     </div>
 </section>
@@ -179,5 +190,91 @@
 
 <script src="i18n.js"></script>
 <script src="app.js"></script>
+<script>
+// ── Canvas particles ──────────────────────────────────────────
+const canvas = document.getElementById('nc-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+    constructor() { this.reset(); }
+    reset() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.r = Math.random() * 1.5 + 0.3;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.alpha = Math.random() * 0.4 + 0.1;
+        this.color = Math.random() > 0.5 ? '91,110,245' : '6,182,212';
+    }
+    update() {
+        this.x += this.vx; this.y += this.vy;
+        if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+    }
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+        ctx.fill();
+    }
+}
+
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+function drawLines() {
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 100) {
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.strokeStyle = `rgba(91,110,245,${0.08 * (1 - dist/100)})`;
+                ctx.lineWidth = 0.5;
+                ctx.stroke();
+            }
+        }
+    }
+}
+
+function animate() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawLines();
+    requestAnimationFrame(animate);
+}
+animate();
+
+// ── Scroll header ─────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+    document.getElementById('nc-header').classList.toggle('scrolled', window.scrollY > 20);
+});
+
+// ── Scroll reveal ─────────────────────────────────────────────
+const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── Counter animation ─────────────────────────────────────────
+function animateCounter(el, target, duration = 1500) {
+    let start = 0, step = target / (duration / 16);
+    const timer = setInterval(() => {
+        start = Math.min(start + step, target);
+        el.textContent = Math.floor(start);
+        if (start >= target) clearInterval(timer);
+    }, 16);
+}
+setTimeout(() => animateCounter(document.getElementById('stat-apps'), 1), 800);
+</script>
 </body>
 </html>

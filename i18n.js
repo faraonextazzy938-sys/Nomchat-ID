@@ -10,6 +10,8 @@ const TRANSLATIONS = {
         'nav.signout': 'Sign out',
 
         // Index hero
+        'hero.line1': 'One account.',
+        'hero.line2': 'All your apps.',
         'hero.title': 'One account.<br>All your apps.',
         'hero.sub': 'Sign in once with your email. No passwords. Your identity — always with you across every app.',
         'hero.getstarted': 'Get started',
@@ -121,6 +123,8 @@ const TRANSLATIONS = {
         'nav.signout': 'Выйти',
 
         // Index hero
+        'hero.line1': 'Один аккаунт.',
+        'hero.line2': 'Все приложения.',
         'hero.title': 'Один аккаунт.<br>Все приложения.',
         'hero.sub': 'Войдите один раз через email. Без паролей. Ваша личность — всегда с вами.',
         'hero.getstarted': 'Начать',
