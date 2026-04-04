@@ -294,7 +294,7 @@ def dev_toggle_site():
 def check_site_disabled():
     # Allow dev and static assets through
     allowed = ['/api/dev/', '/api/auth/me', '/api/auth/logout',
-               '/offline.html', '/main.css', '/login.css']
+               '/offline.html', '/dev.html', '/main.css', '/login.css']
     if _site_disabled:
         path = request.path
         if any(path.startswith(a) for a in allowed):
