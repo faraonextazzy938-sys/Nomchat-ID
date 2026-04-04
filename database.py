@@ -11,6 +11,8 @@ class User(db.Model):
     username   = db.Column(db.String(100), nullable=False)
     avatar     = db.Column(db.String(50), default='skull')
     is_admin   = db.Column(db.Boolean, default=False)
+    is_dev     = db.Column(db.Boolean, default=False)
+    is_creator = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
 
@@ -21,6 +23,8 @@ class User(db.Model):
             'username':   self.username,
             'avatar':     self.avatar,
             'is_admin':   self.is_admin,
+            'is_dev':     self.is_dev,
+            'is_creator': self.is_creator,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'last_login': self.last_login.isoformat() if self.last_login else None,
         }

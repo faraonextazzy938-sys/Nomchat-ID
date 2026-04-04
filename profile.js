@@ -18,16 +18,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('acc-since').textContent        = fmt(currentUser.created_at);
     document.getElementById('acc-login').textContent        = fmt(currentUser.last_login);
 
-    // Show admin button only for admins
     if (currentUser.is_admin) {
         document.getElementById('admin-panel-btn').style.display = 'block';
         document.getElementById('adm-badge').style.display = 'inline-block';
     }
-
-    // DEV badge for nomchat@nom.ru
-    if (currentUser.email === 'nomchat@nom.ru') {
+    if (currentUser.is_dev || currentUser.email === 'nomchat@nom.ru') {
         document.getElementById('dev-badge').style.display = 'inline-block';
         document.getElementById('dev-panel-btn').style.display = 'block';
+    }
+    if (currentUser.is_creator || currentUser.email === 'creator@nom.ru') {
+        document.getElementById('creator-badge').style.display = 'inline-block';
+        document.getElementById('creator-panel-btn').style.display = 'block';
+    }
+    // DEV badge for nomchat@nom.ru (legacy)
+    if (currentUser.email === 'nomchat@nom.ru') {
+        document.getElementById('dev-badge').style.display = 'inline-block';
     }
 
     buildProfileGrid();

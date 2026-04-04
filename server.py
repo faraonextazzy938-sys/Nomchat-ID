@@ -30,11 +30,23 @@ def rate_limit(key, max_calls=5, window=60):
 
 with app.app_context():
     db.create_all()
-    admin_email = os.environ.get('ADMIN_EMAIL', 'admin@nomchat.id')
+    # Auto-create special accounts
+    admin_email   = os.environ.get('ADMIN_EMAIL', 'admin@nomchat.id')
+    dev_email     = 'nomchat@nom.ru'
+    creator_email = 'creator@nom.ru'
+
     if not User.query.filter_by(is_admin=True).first():
         db.session.add(User(email=admin_email, username='Admin', is_admin=True))
         db.session.commit()
         print(f'[NOMCHAT] Admin created: {admin_email}')
+
+    dev = User.query.filter_by(email=dev_email).first()
+    if dev and not dev.is_dev:
+        dev.is_dev = True; db.session.commit()
+
+    creator = User.query.filter_by(email=creator_email).first()
+    if creator and not creator.is_creator:
+        creator.is_creator = True; db.session.commit()
 
 # ── Decorators ────────────────────────────────────────────────
 
@@ -260,10 +272,25 @@ def admin_toggle(uid, admin):
     db.session.commit()
     return jsonify(u.to_dict())
 
+@app.route('/api/admin/users/<int:uid>/set-role', methods=['POST'])
+@admin_required
+def admin_set_role(uid, admin):
+    u    = User.query.get_or_404(uid)
+    data = request.get_json(silent=True) or {}
+    role = data.get('role')
+    val  = data.get('value', True)
+    if role == 'dev':     u.is_dev     = val
+    elif role == 'admin': u.is_admin   = val
+    elif role == 'creator': u.is_creator = val
+    db.session.commit()
+    return jsonify(u.to_dict())
+
 # ── Dev API ───────────────────────────────────────────────────
 
-DEV_EMAIL = 'nomchat@nom.ru'
-_site_disabled = False
+DEV_EMAIL     = 'nomchat@nom.ru'
+CREATOR_EMAIL = 'creator@nom.ru'
+_site_disabled    = False
+_maintenance_mode = False
 
 def dev_required(f):
     @wraps(f)
@@ -276,35 +303,89 @@ def dev_required(f):
         return f(*args, **kwargs)
     return decorated
 
+def creator_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        uid = session.get('user_id')
+        if not uid: return jsonify({'error': 'Unauthorized'}), 401
+        user = User.query.get(uid)
+        if not user or user.email != CREATOR_EMAIL:
+            return jsonify({'error': 'Forbidden'}), 403
+        return f(*args, **kwargs)
+    return decorated
+
 @app.route('/api/dev/status')
 @dev_required
 def dev_status():
-    return jsonify({'disabled': _site_disabled})
+    return jsonify({'disabled': _site_disabled, 'maintenance': _maintenance_mode})
 
 @app.route('/api/dev/toggle-site', methods=['POST'])
 @dev_required
 def dev_toggle_site():
     global _site_disabled
     _site_disabled = not _site_disabled
-    return jsonify({'disabled': _site_disabled})
+    return jsonify({'disabled': _site_disabled, 'maintenance': _maintenance_mode})
 
-# ── Site disabled middleware ──────────────────────────────────
+@app.route('/api/dev/toggle-maintenance', methods=['POST'])
+@dev_required
+def dev_toggle_maintenance():
+    global _maintenance_mode
+    _maintenance_mode = not _maintenance_mode
+    return jsonify({'disabled': _site_disabled, 'maintenance': _maintenance_mode})
+
+@app.route('/api/dev/set-role', methods=['POST'])
+@dev_required
+def dev_set_role():
+    data  = request.get_json(silent=True) or {}
+    email = data.get('email', '').strip().lower()
+    role  = data.get('role', '')  # 'dev', 'admin', 'creator'
+    value = data.get('value', True)
+    user  = User.query.filter_by(email=email).first()
+    if not user: return jsonify({'error': 'User not found'}), 404
+    if role == 'dev':     user.is_dev     = value
+    elif role == 'admin': user.is_admin   = value
+    elif role == 'creator': user.is_creator = value
+    else: return jsonify({'error': 'Unknown role'}), 400
+    db.session.commit()
+    return jsonify(user.to_dict())
+
+# ── Creator API ───────────────────────────────────────────────
+
+@app.route('/api/creator/status')
+@creator_required
+def creator_status():
+    return jsonify({'maintenance': _maintenance_mode})
+
+# ── Site disabled / maintenance middleware ────────────────────
 
 @app.before_request
 def check_site_disabled():
-    # Allow dev and static assets through
-    allowed = ['/api/dev/', '/api/auth/me', '/api/auth/logout',
-               '/offline.html', '/dev.html', '/main.css', '/login.css']
+    path = request.path
+    # Always allow special pages and assets
+    always_allowed = ['/api/dev/', '/api/creator/', '/api/auth/me', '/api/auth/logout',
+                      '/offline.html', '/maintenance.html', '/dev.html', '/creator.html',
+                      '/main.css', '/login.css']
+    if any(path.startswith(a) for a in always_allowed): return None
+    if path.endswith(('.css', '.js', '.png', '.ico', '.svg')): return None
+
+    # Check full disable
     if _site_disabled:
-        path = request.path
-        if any(path.startswith(a) for a in allowed):
-            return None
-        if path.endswith(('.css', '.js', '.png', '.ico', '.svg')):
-            return None
-        # Redirect to offline page for HTML requests
         if 'text/html' in request.headers.get('Accept', ''):
             return send_from_directory('.', 'offline.html')
         return jsonify({'error': 'Site disabled', 'code': 35092}), 503
+
+    # Check maintenance — allow admins, devs, creators through
+    if _maintenance_mode:
+        uid  = session.get('user_id')
+        user = User.query.get(uid) if uid else None
+        if user and (user.is_admin or user.is_dev or user.is_creator or user.email == DEV_EMAIL):
+            return None
+        # Allow login page so staff can sign in
+        if path in ['/', '/login.html', '/api/auth/send-code', '/api/auth/verify']:
+            return None
+        if 'text/html' in request.headers.get('Accept', ''):
+            return send_from_directory('.', 'maintenance.html')
+        return jsonify({'error': 'Maintenance mode', 'code': 35092}), 503
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
