@@ -46,6 +46,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('creator-badge').style.display = 'inline-block';
         document.getElementById('creator-panel-btn').style.display = 'block';
     }
+    if (currentUser.is_support) {
+        document.getElementById('support-badge').style.display = 'inline-block';
+        document.getElementById('support-panel-btn').style.display = 'block';
+    }
     // DEV badge for nomchat@nom.ru (legacy)
     if (currentUser.email === 'nomchat@nom.ru') {
         document.getElementById('dev-badge').style.display = 'inline-block';

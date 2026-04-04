@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, session, send_from_directory, abort
 from flask_cors import CORS
-from database import db, User, VerificationCode, AppToken
+from database import db, User, VerificationCode, AppToken, Report
 from email_service import send_code
 from datetime import datetime, timedelta
 from functools import wraps
@@ -50,6 +50,9 @@ with app.app_context():
         else:
             # Fix NULL values — set to 0
             cur.execute("UPDATE users SET is_banned = 0 WHERE is_banned IS NULL")
+        if 'is_support' not in existing:
+            cur.execute("ALTER TABLE users ADD COLUMN is_support BOOLEAN DEFAULT 0")
+            print('[NOMCHAT] Migration: added is_support column')
         if 'ban_reason' not in existing:
             cur.execute("ALTER TABLE users ADD COLUMN ban_reason TEXT")
             print('[NOMCHAT] Migration: added ban_reason column')
@@ -383,6 +386,18 @@ def creator_required(f):
         return f(*args, **kwargs)
     return decorated
 
+
+def support_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        uid = session.get('user_id')
+        if not uid: return jsonify({'error': 'Unauthorized'}), 401
+        user = User.query.get(uid)
+        if not user or not (user.is_support or user.is_admin or user.is_dev):
+            return jsonify({'error': 'Forbidden'}), 403
+        return f(*args, **kwargs)
+    return decorated
+
 @app.route('/api/dev/status')
 @dev_required
 def dev_status():
@@ -414,6 +429,7 @@ def dev_set_role():
     if role == 'dev':       user.is_dev     = value
     elif role == 'admin':   user.is_admin   = value
     elif role == 'creator': user.is_creator = value
+    elif role == 'support': user.is_support = value
     else: return jsonify({'error': 'Unknown role'}), 400
     db.session.commit()
     return jsonify(user.to_dict())
@@ -481,6 +497,77 @@ def check_site_disabled():
         if 'text/html' in request.headers.get('Accept', ''):
             return send_from_directory('.', 'maintenance.html')
         return jsonify({'error': 'Maintenance mode', 'code': 35092}), 503
+
+# ── Reports API ───────────────────────────────────────────────
+
+@app.route('/api/reports', methods=['POST'])
+@login_required
+def submit_report(user):
+    data = request.get_json(silent=True) or {}
+    subject  = data.get('subject', '').strip()[:200]
+    message  = data.get('message', '').strip()
+    category = data.get('category', 'general')
+    if not subject or not message:
+        return jsonify({'error': 'Subject and message required'}), 400
+    report = Report(
+        reporter_id    = user.id,
+        reporter_email = user.email,
+        subject        = subject,
+        category       = category,
+        message        = message
+    )
+    db.session.add(report)
+    db.session.commit()
+    return jsonify({'success': True, 'id': report.id})
+
+@app.route('/api/reports', methods=['GET'])
+@support_required
+def get_reports():
+    status = request.args.get('status', '')
+    q = Report.query.order_by(Report.created_at.desc())
+    if status: q = q.filter_by(status=status)
+    return jsonify([r.to_dict() for r in q.all()])
+
+@app.route('/api/reports/<int:rid>', methods=['GET'])
+@support_required
+def get_report(rid):
+    r = Report.query.get_or_404(rid)
+    return jsonify(r.to_dict())
+
+@app.route('/api/reports/<int:rid>/respond', methods=['POST'])
+@support_required
+def respond_report(rid):
+    r    = Report.query.get_or_404(rid)
+    data = request.get_json(silent=True) or {}
+    uid  = session.get('user_id')
+    me   = User.query.get(uid)
+    r.response    = data.get('response', '').strip()
+    r.status      = data.get('status', 'resolved')
+    r.resolved_by = me.email
+    r.updated_at  = datetime.utcnow()
+    db.session.commit()
+    return jsonify(r.to_dict())
+
+@app.route('/api/reports/<int:rid>/status', methods=['POST'])
+@support_required
+def update_report_status(rid):
+    r    = Report.query.get_or_404(rid)
+    data = request.get_json(silent=True) or {}
+    r.status     = data.get('status', r.status)
+    r.updated_at = datetime.utcnow()
+    db.session.commit()
+    return jsonify(r.to_dict())
+
+@app.route('/api/support/stats')
+@support_required
+def support_stats():
+    return jsonify({
+        'total':       Report.query.count(),
+        'open':        Report.query.filter_by(status='open').count(),
+        'in_progress': Report.query.filter_by(status='in_progress').count(),
+        'resolved':    Report.query.filter_by(status='resolved').count(),
+        'closed':      Report.query.filter_by(status='closed').count(),
+    })
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
