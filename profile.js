@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show admin button only for admins
     if (currentUser.is_admin) {
         document.getElementById('admin-panel-btn').style.display = 'block';
+        document.getElementById('adm-badge').style.display = 'inline-block';
     }
 
     buildProfileGrid();
