@@ -274,13 +274,17 @@ function renderUsers(users) {
         <tr>
             <td style="color:var(--text3);font-size:0.8em">#${u.id}</td>
             <td class="av-cell">${u.avatar || '💬'}</td>
-            <td><strong>${esc(u.username)}</strong></td>
+            <td><strong>${esc(u.username)}</strong>${u.is_banned ? ' <span style="background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);font-size:0.7em;font-weight:900;padding:2px 7px;border-radius:6px;letter-spacing:0.5px;">🔨 BANNED</span>' : ''}</td>
             <td style="color:var(--text2)">${esc(u.email)}</td>
             <td><span class="badge badge-${u.is_admin ? 'admin' : 'user'}">${u.is_admin ? '🛡️ Admin' : '👤 User'}</span></td>
             <td style="color:var(--text3)">${fmt(u.created_at)}</td>
             <td style="color:var(--text3)">${fmt(u.last_login)}</td>
             <td><div class="actions">
                 <button class="btn btn-sm btn-ghost" onclick="toggleAdmin(${u.id})">${u.is_admin ? 'Remove admin' : 'Make admin'}</button>
+                ${u.is_banned
+                    ? `<button class="btn btn-sm" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3)" onclick="unbanUser(${u.id}, '${esc(u.username)}')">Unban</button>`
+                    : `<button class="btn btn-sm" style="background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)" onclick="banUser(${u.id}, '${esc(u.username)}')">🔨 Ban</button>`
+                }
                 <button class="btn btn-sm btn-red" onclick="deleteUser(${u.id}, '${esc(u.username)}')">Delete</button>
             </div></td>
         </tr>`).join('');
@@ -313,6 +317,25 @@ async function toggleAdmin(id) {
     const res = await fetch(`${API}/api/admin/users/${id}/toggle-admin`, { method: 'POST', credentials: 'include' });
     if (res.ok) { toast('Role updated', 'ok'); loadUsers(); loadAdmins(); }
     else toast('Error updating role', 'err');
+}
+
+async function banUser(id, name) {
+    const reason = prompt(`Ban reason for "${name}":`, 'Нарушение правил');
+    if (reason === null) return;
+    const res = await fetch(`${API}/api/admin/users/${id}/ban`, {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ reason })
+    });
+    if (res.ok) { toast(`🔨 ${name} banned`, 'ok'); loadUsers(); }
+    else { const d = await res.json(); toast('✕ ' + (d.error || 'Error'), 'err'); }
+}
+
+async function unbanUser(id, name) {
+    if (!confirm(`Unban "${name}"?`)) return;
+    const res = await fetch(`${API}/api/admin/users/${id}/unban`, { method: 'POST', credentials: 'include' });
+    if (res.ok) { toast(`✓ ${name} unbanned`, 'ok'); loadUsers(); }
+    else toast('Error', 'err');
 }
 
 async function deleteUser(id, name) {

@@ -13,6 +13,10 @@ class User(db.Model):
     is_admin   = db.Column(db.Boolean, default=False)
     is_dev     = db.Column(db.Boolean, default=False)
     is_creator = db.Column(db.Boolean, default=False)
+    is_banned  = db.Column(db.Boolean, default=False)
+    ban_reason = db.Column(db.String(500), nullable=True)
+    banned_by  = db.Column(db.String(255), nullable=True)
+    banned_at  = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
 
@@ -25,6 +29,10 @@ class User(db.Model):
             'is_admin':   self.is_admin,
             'is_dev':     self.is_dev,
             'is_creator': self.is_creator,
+            'is_banned':  self.is_banned,
+            'ban_reason': self.ban_reason,
+            'banned_by':  self.banned_by,
+            'banned_at':  self.banned_at.isoformat() if self.banned_at else None,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'last_login': self.last_login.isoformat() if self.last_login else None,
         }

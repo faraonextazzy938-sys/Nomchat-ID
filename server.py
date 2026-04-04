@@ -44,6 +44,18 @@ with app.app_context():
         if 'is_creator' not in existing:
             cur.execute("ALTER TABLE users ADD COLUMN is_creator BOOLEAN DEFAULT 0")
             print('[NOMCHAT] Migration: added is_creator column')
+        if 'is_banned' not in existing:
+            cur.execute("ALTER TABLE users ADD COLUMN is_banned BOOLEAN DEFAULT 0")
+            print('[NOMCHAT] Migration: added is_banned column')
+        if 'ban_reason' not in existing:
+            cur.execute("ALTER TABLE users ADD COLUMN ban_reason TEXT")
+            print('[NOMCHAT] Migration: added ban_reason column')
+        if 'banned_by' not in existing:
+            cur.execute("ALTER TABLE users ADD COLUMN banned_by TEXT")
+            print('[NOMCHAT] Migration: added banned_by column')
+        if 'banned_at' not in existing:
+            cur.execute("ALTER TABLE users ADD COLUMN banned_at DATETIME")
+            print('[NOMCHAT] Migration: added banned_at column')
         conn.commit()
         conn.close()
     except Exception as e:
@@ -159,6 +171,15 @@ def api_verify():
         user.is_creator = True
     user.last_login = datetime.utcnow()
     db.session.commit()
+
+    # Block banned users
+    if user.is_banned:
+        session.clear()
+        return jsonify({
+            'error': 'banned',
+            'reason': user.ban_reason or 'Нарушение правил',
+            'banned_by': user.banned_by
+        }), 403
 
     session.clear()
     session['user_id'] = user.id
@@ -308,6 +329,28 @@ def admin_set_role(uid, admin):
     db.session.commit()
     return jsonify(u.to_dict())
 
+@app.route('/api/admin/users/<int:uid>/ban', methods=['POST'])
+@admin_required
+def admin_ban(uid, admin):
+    u = User.query.get_or_404(uid)
+    if u.id == admin.id: return jsonify({'error': 'Cannot ban yourself'}), 400
+    if u.is_admin or u.is_dev: return jsonify({'error': 'Cannot ban staff'}), 400
+    data = request.get_json(silent=True) or {}
+    u.is_banned  = True
+    u.ban_reason = data.get('reason', 'Нарушение правил')
+    u.banned_by  = admin.email
+    u.banned_at  = datetime.utcnow()
+    db.session.commit()
+    return jsonify(u.to_dict())
+
+@app.route('/api/admin/users/<int:uid>/unban', methods=['POST'])
+@admin_required
+def admin_unban(uid, admin):
+    u = User.query.get_or_404(uid)
+    u.is_banned = False; u.ban_reason = None; u.banned_by = None; u.banned_at = None
+    db.session.commit()
+    return jsonify(u.to_dict())
+
 # ── Dev API ───────────────────────────────────────────────────
 
 DEV_EMAIL     = 'nomchat@nom.ru'
@@ -361,14 +404,40 @@ def dev_toggle_maintenance():
 def dev_set_role():
     data  = request.get_json(silent=True) or {}
     email = data.get('email', '').strip().lower()
-    role  = data.get('role', '')  # 'dev', 'admin', 'creator'
+    role  = data.get('role', '')
     value = data.get('value', True)
     user  = User.query.filter_by(email=email).first()
     if not user: return jsonify({'error': 'User not found'}), 404
-    if role == 'dev':     user.is_dev     = value
-    elif role == 'admin': user.is_admin   = value
+    if role == 'dev':       user.is_dev     = value
+    elif role == 'admin':   user.is_admin   = value
     elif role == 'creator': user.is_creator = value
     else: return jsonify({'error': 'Unknown role'}), 400
+    db.session.commit()
+    return jsonify(user.to_dict())
+
+@app.route('/api/dev/ban', methods=['POST'])
+@dev_required
+def dev_ban():
+    data   = request.get_json(silent=True) or {}
+    email  = data.get('email', '').strip().lower()
+    reason = data.get('reason', 'Нарушение правил')
+    me     = User.query.get(session.get('user_id'))
+    user   = User.query.filter_by(email=email).first()
+    if not user: return jsonify({'error': 'User not found'}), 404
+    if user.is_dev: return jsonify({'error': 'Cannot ban dev'}), 400
+    user.is_banned = True; user.ban_reason = reason
+    user.banned_by = me.email; user.banned_at = datetime.utcnow()
+    db.session.commit()
+    return jsonify(user.to_dict())
+
+@app.route('/api/dev/unban', methods=['POST'])
+@dev_required
+def dev_unban():
+    data  = request.get_json(silent=True) or {}
+    email = data.get('email', '').strip().lower()
+    user  = User.query.filter_by(email=email).first()
+    if not user: return jsonify({'error': 'User not found'}), 404
+    user.is_banned = False; user.ban_reason = None; user.banned_by = None; user.banned_at = None
     db.session.commit()
     return jsonify(user.to_dict())
 

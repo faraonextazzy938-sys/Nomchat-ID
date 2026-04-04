@@ -18,6 +18,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('acc-since').textContent        = fmt(currentUser.created_at);
     document.getElementById('acc-login').textContent        = fmt(currentUser.last_login);
 
+    if (currentUser.is_banned) {
+        // Show banned notice and block access
+        document.getElementById('adm-badge').style.display = 'none';
+        document.getElementById('dev-badge').style.display = 'none';
+        document.getElementById('creator-badge').style.display = 'none';
+        const bannedBadge = document.createElement('span');
+        bannedBadge.innerHTML = '🔨 BANNED';
+        bannedBadge.style.cssText = 'background:rgba(239,68,68,0.2);color:#ef4444;border:1px solid rgba(239,68,68,0.4);font-size:0.55em;font-weight:900;padding:3px 8px;border-radius:6px;letter-spacing:1px;';
+        document.getElementById('profile-username').after(bannedBadge);
+        // Show ban reason
+        const banInfo = document.createElement('p');
+        banInfo.style.cssText = 'color:#ef4444;font-size:0.82em;margin-top:8px;';
+        banInfo.textContent = `Banned: ${currentUser.ban_reason || 'Нарушение правил'}`;
+        document.querySelector('.nc-profile-email').after(banInfo);
+    }
+
     if (currentUser.is_admin) {
         document.getElementById('admin-panel-btn').style.display = 'block';
         document.getElementById('adm-badge').style.display = 'inline-block';
