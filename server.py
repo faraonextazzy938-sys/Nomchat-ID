@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, session, send_from_directory, abort
 from flask_cors import CORS
-from database import db, User, VerificationCode
+from database import db, User, VerificationCode, AppToken
 from email_service import send_code
 from datetime import datetime, timedelta
 from functools import wraps
@@ -139,6 +139,63 @@ def api_me(user):
 def api_logout():
     session.clear()
     return jsonify({'success': True})
+
+# ── Nomchat ID Token API (для внешних приложений) ─────────────
+
+@app.route('/api/auth/token/issue', methods=['POST'])
+def api_issue_token():
+    """Выдать временный токен для внешнего приложения после верификации"""
+    uid = session.get('user_id')
+    if not uid:
+        return jsonify({'error': 'Unauthorized'}), 401
+    user = User.query.get(uid)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    data = request.get_json(silent=True) or {}
+    app_id = data.get('app_id', 'unknown')
+
+    token = secrets.token_urlsafe(32)
+    expires = datetime.utcnow() + timedelta(minutes=5)
+
+    # Сохраняем токен в БД
+    existing = AppToken.query.filter_by(user_id=user.id, app_id=app_id).first()
+    if existing:
+        existing.token = token
+        existing.expires_at = expires
+    else:
+        db.session.add(AppToken(user_id=user.id, app_id=app_id, token=token, expires_at=expires))
+    db.session.commit()
+
+    return jsonify({'token': token, 'expires_in': 300})
+
+@app.route('/api/auth/token/verify', methods=['POST'])
+def api_verify_token():
+    """Проверить токен от внешнего приложения"""
+    data = request.get_json(silent=True) or {}
+    token = data.get('token', '')
+    app_id = data.get('app_id', 'unknown')
+
+    if not token:
+        return jsonify({'error': 'Token required'}), 400
+
+    at = AppToken.query.filter_by(token=token, app_id=app_id).first()
+    if not at:
+        return jsonify({'error': 'Invalid token'}), 401
+    if at.expires_at < datetime.utcnow():
+        db.session.delete(at)
+        db.session.commit()
+        return jsonify({'error': 'Token expired'}), 401
+
+    user = User.query.get(at.user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    # Токен одноразовый — удаляем после использования
+    db.session.delete(at)
+    db.session.commit()
+
+    return jsonify({'success': True, 'user': user.to_dict()})
 
 # ── User API ──────────────────────────────────────────────────
 

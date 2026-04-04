@@ -33,3 +33,17 @@ class VerificationCode(db.Model):
     code       = db.Column(db.String(6), nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class AppToken(db.Model):
+    """Временные токены для авторизации внешних приложений через Nomchat ID"""
+    __tablename__ = 'app_tokens'
+
+    id         = db.Column(db.Integer, primary_key=True)
+    user_id    = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    app_id     = db.Column(db.String(100), nullable=False)
+    token      = db.Column(db.String(64), unique=True, nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('app_tokens', cascade='all, delete-orphan'))
