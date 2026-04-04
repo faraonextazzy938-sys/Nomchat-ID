@@ -321,7 +321,7 @@ def dev_required(f):
         uid = session.get('user_id')
         if not uid: return jsonify({'error': 'Unauthorized'}), 401
         user = User.query.get(uid)
-        if not user or user.email != DEV_EMAIL:
+        if not user or (user.email != DEV_EMAIL and not user.is_dev):
             return jsonify({'error': 'Forbidden'}), 403
         return f(*args, **kwargs)
     return decorated
