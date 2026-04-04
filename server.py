@@ -30,6 +30,24 @@ def rate_limit(key, max_calls=5, window=60):
 
 with app.app_context():
     db.create_all()
+
+    # Manual migration — add new columns if they don't exist
+    import sqlite3
+    db_path = os.path.join(os.path.dirname(__file__), 'instance', 'nomchat.db')
+    try:
+        conn = sqlite3.connect(db_path)
+        cur  = conn.cursor()
+        existing = [row[1] for row in cur.execute("PRAGMA table_info(users)").fetchall()]
+        if 'is_dev' not in existing:
+            cur.execute("ALTER TABLE users ADD COLUMN is_dev BOOLEAN DEFAULT 0")
+            print('[NOMCHAT] Migration: added is_dev column')
+        if 'is_creator' not in existing:
+            cur.execute("ALTER TABLE users ADD COLUMN is_creator BOOLEAN DEFAULT 0")
+            print('[NOMCHAT] Migration: added is_creator column')
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(f'[NOMCHAT] Migration warning: {e}')
     # Auto-create special accounts
     admin_email   = os.environ.get('ADMIN_EMAIL', 'admin@nomchat.id')
     dev_email     = 'nomchat@nom.ru'
